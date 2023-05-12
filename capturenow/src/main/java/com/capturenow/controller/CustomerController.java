@@ -19,6 +19,7 @@ public class CustomerController {
 	CustomerService service;
 	
 	//localhost:8080/customerRegister
+	@CrossOrigin
 	@PostMapping("/customerReg")
 	ResponseEntity<Customer> customerReg(@RequestBody Customer c)
 	{
@@ -26,6 +27,7 @@ public class CustomerController {
 	}
 	
 	//localhost:8080/customerLogin
+	@CrossOrigin
 	@GetMapping("/customerLogin")
 	ResponseEntity<Customer> customerLogin(@RequestHeader String email,String password)
 	{
