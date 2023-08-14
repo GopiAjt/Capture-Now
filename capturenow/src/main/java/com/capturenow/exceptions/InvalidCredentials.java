@@ -1,5 +1,6 @@
 package com.capturenow.exceptions;
 
+
 public class InvalidCredentials extends RuntimeException {
 
 	/**

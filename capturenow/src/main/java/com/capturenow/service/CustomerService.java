@@ -1,7 +1,9 @@
 package com.capturenow.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
+import com.capturenow.dto.PhotographerCardDto;
+import com.capturenow.dto.PhotographerDTO;
 import com.capturenow.module.Customer;
 
 public interface CustomerService {
@@ -10,4 +12,10 @@ public interface CustomerService {
 	
 	Customer customerLogin(String email, String password);
 
+	Boolean validateEmail(String email, Integer otp);
+
+	List<PhotographerCardDto> getAllPhotographers();
+	
+	PhotographerDTO getPhotographerById(String email);
+	
 }
