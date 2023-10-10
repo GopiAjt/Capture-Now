@@ -1,5 +1,6 @@
 package com.capturenow.serviceimpl;
 
+import com.capturenow.dto.PhotographerResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -7,7 +8,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.capturenow.config.ImageUtils;
 import com.capturenow.dto.PhotographerCardDto;
-import com.capturenow.dto.PhotographerDTO;
 import com.capturenow.email.EmailService;
 import com.capturenow.module.Customer;
 import com.capturenow.module.Photographer;
@@ -116,7 +116,7 @@ public class CustomerServiceImpl implements CustomerService{
 		List<PhotographerCardDto> card = new ArrayList<>(p.size());
 		for(Photographer photographer : p)
 		{
-			PhotographerCardDto cardDto = new PhotographerCardDto(photographer.getName(),photographer.getServiceLocation(),photographer.getExperience(), photographer.getServices(),photographer.getLanguages(),photographer.getProfilePhoto());
+			PhotographerCardDto cardDto = new PhotographerCardDto(photographer.getName(), photographer.getEmail(), photographer.getServiceLocation(),photographer.getExperience(), photographer.getServices(),photographer.getLanguages(),photographer.getProfilePhoto());
 			if(cardDto.getProfilePhoto() != null)
 			{
 				cardDto.setProfilePhoto(ImageUtils.decompressImage(cardDto.getProfilePhoto()));
@@ -127,13 +127,13 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public PhotographerDTO getPhotographerById(String email) {
+	public PhotographerResponseDto getPhotographerById(String email) {
 		Photographer photographer = photographerRepo.findByEmail(email);
 		if(photographer != null)
 		{
-			PhotographerDTO p = new PhotographerDTO();
+			PhotographerResponseDto p = new PhotographerResponseDto();
 			p.setName(photographer.getName());
-			p.setPhoneNumber(photographer.getPhoneNumber());
+//			p.setPhoneNumber(photographer.getPhoneNumber());
 			p.setExperience(photographer.getExperience());
 			p.setLanguages(photographer.getLanguages());
 			p.setAboutMe(photographer.getAboutMe());
@@ -141,10 +141,8 @@ public class CustomerServiceImpl implements CustomerService{
 			p.setServiceLocation(photographer.getServiceLocation());
 			p.setPackages(photographer.getPackages());
 			p.setProfilePhoto(ImageUtils.decompressImage(photographer.getProfilePhoto()));
-			
 			return p;
 		}
 		return null;
 	}
-
 }

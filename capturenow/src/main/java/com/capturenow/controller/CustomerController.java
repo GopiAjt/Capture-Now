@@ -2,6 +2,7 @@ package com.capturenow.controller;
 
 import java.util.List;
 
+import com.capturenow.dto.PhotographerResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -108,8 +109,8 @@ public class CustomerController {
 	
 	@GetMapping(path = "/getPhotographerByEmail")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
-	public ResponseEntity<PhotographerDTO> getPhotographerByEmail(@RequestParam String email)
+	public ResponseEntity<PhotographerResponseDto> getPhotographerByEmail(@RequestParam String email)
 	{
-		return new ResponseEntity<PhotographerDTO>(service.getPhotographerById(email), HttpStatus.OK);
+		return new ResponseEntity<PhotographerResponseDto>(service.getPhotographerById(email), HttpStatus.OK);
 	}
 }

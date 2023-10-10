@@ -71,11 +71,11 @@ public class Photographer implements UserDetails{
 	@Column(length = 500)
 	private String aboutMe;//required
 	
-	 @JsonManagedReference
+	@JsonManagedReference
 	@OneToMany(mappedBy = "photographer", cascade = CascadeType.PERSIST)
 	private List<Albums> Albums;
 	
-	 @JsonManagedReference
+	@JsonManagedReference
 	@OneToMany(mappedBy = "photographer", cascade = CascadeType.PERSIST)
 	private List<Packages> Packages;
 	

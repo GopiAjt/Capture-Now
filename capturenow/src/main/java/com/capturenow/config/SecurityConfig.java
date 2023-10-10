@@ -30,7 +30,7 @@ import com.capturenow.serviceimpl.CustomerUserDetailsService;
 import com.capturenow.serviceimpl.PhotographerUserDetailsService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.var;
+//import lombok.var;
 
 
 @Configuration

@@ -8,6 +8,8 @@ import lombok.Data;
 public class PhotographerCardDto {
 
 	private String name;
+
+	private String mailId;
 	
 	private String serviceLocation;
 	

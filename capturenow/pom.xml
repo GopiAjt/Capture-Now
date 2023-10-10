@@ -14,7 +14,9 @@
 	<name>capturenow</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -88,15 +90,15 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-    <groupId>commons-fileupload</groupId>
-    <artifactId>commons-fileupload</artifactId>
-    <version>1.4</version>
-</dependency>
-		<dependency>
-			<groupId>com</groupId>
-			<artifactId>SpringAuthentication</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+    		<groupId>commons-fileupload</groupId>
+    		<artifactId>commons-fileupload</artifactId>
+    		<version>1.4</version>
 		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework</groupId>-->
+<!--			<artifactId>SpringAuthentication</artifactId>-->
+<!--			<version>1.0.0</version>-->
+<!--		</dependency>-->
 	</dependencies>
 	<build>
 		<plugins>

@@ -43,4 +43,6 @@ public class PhotographerDTO {
 
 	private String authToken;
 
+
+
 }

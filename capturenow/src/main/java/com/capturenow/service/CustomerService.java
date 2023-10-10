@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.capturenow.dto.PhotographerCardDto;
 import com.capturenow.dto.PhotographerDTO;
+import com.capturenow.dto.PhotographerResponseDto;
 import com.capturenow.module.Customer;
 
 public interface CustomerService {
@@ -15,7 +16,7 @@ public interface CustomerService {
 	Boolean validateEmail(String email, Integer otp);
 
 	List<PhotographerCardDto> getAllPhotographers();
-	
-	PhotographerDTO getPhotographerById(String email);
+
+	PhotographerResponseDto getPhotographerById(String email);
 	
 }
