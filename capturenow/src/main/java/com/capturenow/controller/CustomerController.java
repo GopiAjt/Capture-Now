@@ -2,6 +2,7 @@ package com.capturenow.controller;
 
 import java.util.List;
 
+import com.capturenow.dto.AlbumResponseDto;
 import com.capturenow.dto.PhotographerResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,14 +22,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capturenow.dto.PhotographerCardDto;
-import com.capturenow.dto.PhotographerDTO;
 import com.capturenow.module.Customer;
 import com.capturenow.repository.CustomerRepo;
 import com.capturenow.service.CustomerService;
 import com.capturenow.serviceimpl.JwtService;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
-import com.capturenow.module.Photographer;
 
 
 @Log4j2
@@ -71,7 +70,7 @@ public class CustomerController {
 	}
 
 
-	//localhost:8080/customer/signin
+	//localhost:8080/customer/sign_in
 	@GetMapping(path = "/signin")
 	ResponseEntity<Customer> customerLogin(@RequestParam String email, @RequestParam String password)
 	{
@@ -113,4 +112,12 @@ public class CustomerController {
 	{
 		return new ResponseEntity<PhotographerResponseDto>(service.getPhotographerById(email), HttpStatus.OK);
 	}
+
+	@GetMapping(path = "/getAlbumsByEmail")
+	@PreAuthorize("hasAuthority('ROLE_USER')")
+	public ResponseEntity<List<AlbumResponseDto>> getAlbumByEmail(@RequestParam String email)
+	{
+		return new ResponseEntity<List<AlbumResponseDto>>(service.getAlbumByEmail(email), HttpStatus.OK);
+	}
+
 }

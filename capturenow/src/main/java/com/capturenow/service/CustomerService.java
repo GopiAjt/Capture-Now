@@ -2,6 +2,7 @@ package com.capturenow.service;
 
 import java.util.List;
 
+import com.capturenow.dto.AlbumResponseDto;
 import com.capturenow.dto.PhotographerCardDto;
 import com.capturenow.dto.PhotographerDTO;
 import com.capturenow.dto.PhotographerResponseDto;
@@ -18,5 +19,7 @@ public interface CustomerService {
 	List<PhotographerCardDto> getAllPhotographers();
 
 	PhotographerResponseDto getPhotographerById(String email);
+
+	List<AlbumResponseDto> getAlbumByEmail(String email);
 	
 }

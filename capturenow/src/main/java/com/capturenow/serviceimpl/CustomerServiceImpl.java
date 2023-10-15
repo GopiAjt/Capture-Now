@@ -1,11 +1,12 @@
 package com.capturenow.serviceimpl;
 
+import com.capturenow.dto.AlbumResponseDto;
 import com.capturenow.dto.PhotographerResponseDto;
+import com.capturenow.module.Albums;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.capturenow.config.ImageUtils;
 import com.capturenow.dto.PhotographerCardDto;
 import com.capturenow.email.EmailService;
@@ -14,11 +15,9 @@ import com.capturenow.module.Photographer;
 import com.capturenow.repository.CustomerRepo;
 import com.capturenow.repository.PhotographerRepo;
 import com.capturenow.service.CustomerService;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import lombok.Data;
 
 @Service
@@ -144,5 +143,26 @@ public class CustomerServiceImpl implements CustomerService{
 			return p;
 		}
 		return null;
+	}
+
+	@Override
+	public List<AlbumResponseDto> getAlbumByEmail(String email) {
+		Photographer photographer = photographerRepo.findByEmail(email);
+		List<AlbumResponseDto> albumResponseDtos = new ArrayList<>();
+		if(photographer != null)
+		{
+			AlbumResponseDto albumResponseDto = new AlbumResponseDto();
+			List<Albums> albums = photographer.getAlbums();
+
+			for(Albums a : albums)
+			{
+				if(!a.getCategory().equals("equipment")) {
+					albumResponseDto.setPhoto(ImageUtils.decompressImage(a.getPhoto()));
+					albumResponseDtos.add(albumResponseDto);
+				}
+			}
+
+		}
+		return albumResponseDtos;
 	}
 }
