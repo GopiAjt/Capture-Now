@@ -7,8 +7,9 @@ import lombok.Data;
 @Data
 public class AlbumResponseDto {
 
-    @Lob
-    @Column(name = "photo", columnDefinition="LONGBLOB")
     private byte[] photo;
 
+    private String category;
+
+    private String name;
 }

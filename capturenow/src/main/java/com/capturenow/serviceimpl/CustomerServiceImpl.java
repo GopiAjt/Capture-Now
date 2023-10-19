@@ -152,13 +152,15 @@ public class CustomerServiceImpl implements CustomerService{
 		List<AlbumResponseDto> albumResponseDtos = new ArrayList<>();
 		if(photographer != null)
 		{
-			AlbumResponseDto albumResponseDto = new AlbumResponseDto();
 			List<Albums> albums = photographer.getAlbums();
 
 			for(Albums a : albums)
 			{
 				if(!a.getCategory().equals("equipment")) {
+					AlbumResponseDto albumResponseDto = new AlbumResponseDto();
 					albumResponseDto.setPhoto(ImageUtils.decompressImage(a.getPhoto()));
+					albumResponseDto.setCategory(a.getCategory());
+					albumResponseDto.setName(a.getName());
 					albumResponseDtos.add(albumResponseDto);
 				}
 			}
@@ -173,13 +175,15 @@ public class CustomerServiceImpl implements CustomerService{
 		List<AlbumResponseDto> albumResponseDtos = new ArrayList<>();
 		if(photographer != null)
 		{
-			AlbumResponseDto albumResponseDto = new AlbumResponseDto();
 			List<Albums> albums = photographer.getAlbums();
 
 			for(Albums a : albums)
 			{
 				if(a.getCategory().equals("equipment")) {
+					AlbumResponseDto albumResponseDto = new AlbumResponseDto();
 					albumResponseDto.setPhoto(ImageUtils.decompressImage(a.getPhoto()));
+					albumResponseDto.setName(a.getName());
+					albumResponseDto.setCategory(a.getCategory());
 					albumResponseDtos.add(albumResponseDto);
 				}
 			}
