@@ -58,10 +58,12 @@ public class SecurityConfig {
 				.cors(Customizer.withDefaults())
 				.securityMatcher(AntPathRequestMatcher.antMatcher("/customer/**"))
 				.authorizeHttpRequests()
-				.requestMatchers("/customer/signup","/customer/signin","/customer/authtoken","/customer/validate","/photographer/signup","/photographer/validate","/photographer/signin","/photographer/authtoken")
+				.requestMatchers("/customer/signup","/customer/signin","/customer/authtoken","/customer/validate",
+						"/photographer/signup","/photographer/validate","/photographer/signin","/photographer/authtoken")
 				.permitAll()
 				.and()
-				.authorizeHttpRequests().requestMatchers("/customer/getPhotographers","/customer/getPhotographerByEmail","/customer/getEquipmentsByEmail", "/customer/getAlbumsByEmail","/photographer/add","/photographer/addpackage")
+				.authorizeHttpRequests().requestMatchers("/customer/getPhotographers","/customer/getPhotographerByEmail",
+						"/customer/getEquipmentsByEmail", "/customer/getAlbumsByEmail","/photographer/add","/photographer/addpackage")
 				.authenticated().and()
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
