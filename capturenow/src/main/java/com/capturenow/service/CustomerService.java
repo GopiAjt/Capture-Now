@@ -21,5 +21,7 @@ public interface CustomerService {
 	PhotographerResponseDto getPhotographerById(String email);
 
 	List<AlbumResponseDto> getAlbumByEmail(String email);
+
+	List<AlbumResponseDto> getEquipmentsByEmail(String email);
 	
 }

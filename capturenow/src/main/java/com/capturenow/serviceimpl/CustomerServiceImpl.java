@@ -133,6 +133,7 @@ public class CustomerServiceImpl implements CustomerService{
 			PhotographerResponseDto p = new PhotographerResponseDto();
 			p.setName(photographer.getName());
 //			p.setPhoneNumber(photographer.getPhoneNumber());
+			p.setEmail(email);
 			p.setExperience(photographer.getExperience());
 			p.setLanguages(photographer.getLanguages());
 			p.setAboutMe(photographer.getAboutMe());
@@ -157,6 +158,27 @@ public class CustomerServiceImpl implements CustomerService{
 			for(Albums a : albums)
 			{
 				if(!a.getCategory().equals("equipment")) {
+					albumResponseDto.setPhoto(ImageUtils.decompressImage(a.getPhoto()));
+					albumResponseDtos.add(albumResponseDto);
+				}
+			}
+
+		}
+		return albumResponseDtos;
+	}
+
+    public List<AlbumResponseDto> getEquipmentsByEmail(String email)
+	{
+		Photographer photographer = photographerRepo.findByEmail(email);
+		List<AlbumResponseDto> albumResponseDtos = new ArrayList<>();
+		if(photographer != null)
+		{
+			AlbumResponseDto albumResponseDto = new AlbumResponseDto();
+			List<Albums> albums = photographer.getAlbums();
+
+			for(Albums a : albums)
+			{
+				if(a.getCategory().equals("equipment")) {
 					albumResponseDto.setPhoto(ImageUtils.decompressImage(a.getPhoto()));
 					albumResponseDtos.add(albumResponseDto);
 				}

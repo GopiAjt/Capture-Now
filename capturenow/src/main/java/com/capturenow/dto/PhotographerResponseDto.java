@@ -1,6 +1,5 @@
 package com.capturenow.dto;
 
-import com.capturenow.module.Albums;
 import com.capturenow.module.Packages;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
@@ -36,4 +35,7 @@ public class PhotographerResponseDto {
     private String languages;//required
 
     private String aboutMe;//required
+
+    public void setEmail() {
+    }
 }

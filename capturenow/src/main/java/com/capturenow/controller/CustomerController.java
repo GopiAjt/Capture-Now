@@ -120,4 +120,11 @@ public class CustomerController {
 		return new ResponseEntity<List<AlbumResponseDto>>(service.getAlbumByEmail(email), HttpStatus.OK);
 	}
 
+	@GetMapping(path = "/getEquipmentsByEmail")
+	@PreAuthorize("hasAuthority('ROLE_USER')")
+	public ResponseEntity<List<AlbumResponseDto>> getEquipmentsByEmail(@RequestParam String email)
+	{
+		return new ResponseEntity<List<AlbumResponseDto>>(service.getEquipmentsByEmail(email), HttpStatus.OK);
+	}
+
 }
