@@ -2,8 +2,7 @@ package com.capturenow.controller;
 
 import java.util.List;
 
-import com.capturenow.dto.AlbumResponseDto;
-import com.capturenow.dto.PhotographerResponseDto;
+import com.capturenow.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.capturenow.dto.PhotographerCardDto;
 import com.capturenow.module.Customer;
 import com.capturenow.repository.CustomerRepo;
 import com.capturenow.service.CustomerService;
@@ -127,4 +124,21 @@ public class CustomerController {
 		return new ResponseEntity<List<AlbumResponseDto>>(service.getEquipmentsByEmail(email), HttpStatus.OK);
 	}
 
+	@PostMapping(path = "/addReview")
+	@PreAuthorize("hasAuthority('ROLE_USER')")
+	public ResponseEntity<String> addRating(@RequestBody RatingDTO ratingDTO) {
+		if(service.addReview(ratingDTO)) {
+			// You can add validation logic here to ensure that the rating value is within a valid range.
+			// You can also add authentication and authorization checks to make sure the customer is authorized to submit a rating.
+			return new ResponseEntity<>("Rating added successfully", HttpStatus.CREATED);
+		} else {
+            return new ResponseEntity<>("Failed to add rating",  HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping(path = "/getReviews")
+	@PreAuthorize("hasAuthority('ROLE_USER')")
+	public ResponseEntity<RatingResponseDTO> getRatings(@RequestParam String email) {
+		return new ResponseEntity<RatingResponseDTO>(service.getRatingsByEmail(email), HttpStatus.OK);
+	}
 }

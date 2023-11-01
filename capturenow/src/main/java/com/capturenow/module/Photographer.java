@@ -78,6 +78,9 @@ public class Photographer implements UserDetails{
 	@JsonManagedReference
 	@OneToMany(mappedBy = "photographer", cascade = CascadeType.PERSIST)
 	private List<Packages> Packages;
+
+	@OneToMany(mappedBy = "photographer", cascade =  CascadeType.PERSIST)
+	private List<PhotographerRatings> photographerRatings;
 	
 	private String role = "ROLE_PHOTOGRAPHER";
 	

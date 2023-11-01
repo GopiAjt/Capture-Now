@@ -1,14 +1,14 @@
 package com.capturenow.serviceimpl;
 
-import com.capturenow.dto.AlbumResponseDto;
-import com.capturenow.dto.PhotographerResponseDto;
+import com.capturenow.dto.*;
 import com.capturenow.module.Albums;
+import com.capturenow.module.PhotographerRatings;
+import com.capturenow.repository.RatingRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.capturenow.config.ImageUtils;
-import com.capturenow.dto.PhotographerCardDto;
 import com.capturenow.email.EmailService;
 import com.capturenow.module.Customer;
 import com.capturenow.module.Photographer;
@@ -27,6 +27,8 @@ public class CustomerServiceImpl implements CustomerService{
 	private final CustomerRepo repo;//login to talk with the database
 	
 	private final PhotographerRepo photographerRepo;
+
+	private final RatingRepo ratingRepo;
 	
 	private final EmailService emailService;//logic to send the email
 	
@@ -108,11 +110,7 @@ public class CustomerServiceImpl implements CustomerService{
 	@Override
 	public List<PhotographerCardDto> getAllPhotographers() {
 		List<Photographer> p = photographerRepo.findAll();
-		if(p == null)
-		{
-			return null;
-		}
-		List<PhotographerCardDto> card = new ArrayList<>(p.size());
+        List<PhotographerCardDto> card = new ArrayList<>(p.size());
 		for(Photographer photographer : p)
 		{
 			PhotographerCardDto cardDto = new PhotographerCardDto(photographer.getName(), photographer.getEmail(), photographer.getServiceLocation(),photographer.getExperience(), photographer.getServices(),photographer.getLanguages(),photographer.getProfilePhoto());
@@ -190,5 +188,31 @@ public class CustomerServiceImpl implements CustomerService{
 
 		}
 		return albumResponseDtos;
+	}
+
+	@Override
+	public boolean addReview(RatingDTO ratingDTO) {
+		try {
+			PhotographerRatings newRating = new PhotographerRatings();
+			newRating.setCustomer(repo.findByEmail(ratingDTO.getCustomerId()));
+			newRating.setPhotographer(photographerRepo.findByEmail(ratingDTO.getPhotographerId()));
+			newRating.setRatings(ratingDTO.getRating());
+			newRating.setComments(ratingDTO.getComment());
+			ratingRepo.save(newRating);
+			return true;
+		}catch (Exception e)
+		{
+			return false;
+		}
+
+	}
+
+	@Override
+	public RatingResponseDTO getRatingsByEmail(String email) {
+		Photographer photographer = photographerRepo.findByEmail(email);
+		List<RatingResponseDTO> ratingResponseDTO = new ArrayList<RatingResponseDTO>();
+		List<PhotographerRatings> photographerRatings = photographer.getPhotographerRatings();
+
+		return null;
 	}
 }

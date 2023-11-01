@@ -2,10 +2,7 @@ package com.capturenow.service;
 
 import java.util.List;
 
-import com.capturenow.dto.AlbumResponseDto;
-import com.capturenow.dto.PhotographerCardDto;
-import com.capturenow.dto.PhotographerDTO;
-import com.capturenow.dto.PhotographerResponseDto;
+import com.capturenow.dto.*;
 import com.capturenow.module.Customer;
 
 public interface CustomerService {
@@ -23,5 +20,8 @@ public interface CustomerService {
 	List<AlbumResponseDto> getAlbumByEmail(String email);
 
 	List<AlbumResponseDto> getEquipmentsByEmail(String email);
-	
+
+	boolean addReview(RatingDTO ratingDTO);
+
+	RatingResponseDTO getRatingsByEmail(String email);
 }

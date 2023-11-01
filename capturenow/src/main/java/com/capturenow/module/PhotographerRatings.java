@@ -1,9 +1,7 @@
 package com.capturenow.module;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -17,4 +15,14 @@ public class PhotographerRatings {
 	private int ratings;
 	
 	private String comments;
+
+	@JsonBackReference
+	@JoinColumn
+	@ManyToOne
+	private Photographer photographer;
+
+	@JsonBackReference
+	@JoinColumn
+	@ManyToOne
+	private  Customer customer;
 }
