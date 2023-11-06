@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import com.capturenow.dto.PhotographerRegistrationDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,18 +37,27 @@ public class PhotographerServiceImpl implements PhotographerService{
 	private final AlbumRepo albumRepo;
 
 	@Override
-	public Photographer photographerSignup(Photographer photographer) {
+	public Photographer photographerSignup(PhotographerRegistrationDTO photographer) {
 
 		Photographer exist = repo.findByEmail(photographer.getEmail());
 
 		if(exist == null)
 		{
-			//			emailService.sendToPhotographer(photographer.getEmail(), photographer);
-			photographer.setPassword(encoder.encode(photographer.getPassword()));//encode the password with BCrypt
-			photographer.setSignupDateTime(new Date());
-			photographer.setStatus(false);
-			photographer.setLogin(false);
-			return repo.save(photographer);
+			Photographer p = new Photographer();
+			p.setName(photographer.getName());
+			p.setEmail(photographer.getEmail());
+			p.setPassword(encoder.encode(photographer.getPassword()));
+			p.setPhoneNumber(photographer.getPhoneNumber());
+			p.setServiceLocation(photographer.getServiceLocation());
+			p.setExperience(photographer.getExperience());
+			p.setServices(photographer.getServices());
+			p.setLanguages(photographer.getLanguages());
+			p.setAboutMe(photographer.getAboutMe());
+			emailService.sendToPhotographer(photographer.getEmail(), p);
+			p.setSignupDateTime(new Date());
+			p.setStatus(false);
+			p.setLogin(false);
+			return repo.save(p);
 		}
 		else
 		{
@@ -64,7 +75,7 @@ public class PhotographerServiceImpl implements PhotographerService{
 		{
 			if(p.isStatus())//check if the otp is verified or not
 			{
-				if(encoder.matches(password, p.getPassword()))//check password matches or not
+				if(password.equals(p.getPassword()) || encoder.matches(password, p.getPassword()))//check password matches or not
 				{
 					p.setLogin(true);
 					return repo.save(p);

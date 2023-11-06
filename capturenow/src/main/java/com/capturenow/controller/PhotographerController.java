@@ -2,6 +2,8 @@ package com.capturenow.controller;
 
 
 import java.util.List;
+
+import com.capturenow.dto.PhotographerRegistrationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -58,9 +60,10 @@ public class PhotographerController {
 	@Autowired
 	private final AuthenticationManager authenticationManager;
 
-	
+
+
 	@PostMapping(path = "/signup")
-	public ResponseEntity<Photographer> photographerSignUp(@RequestBody Photographer p)
+	public ResponseEntity<Photographer> photographerSignUp(@RequestBody PhotographerRegistrationDTO p)
 	{   
 		Photographer photographer = service.photographerSignup(p);
 		if(photographer != null)

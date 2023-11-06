@@ -138,7 +138,7 @@ public class CustomerController {
 
 	@GetMapping(path = "/getReviews")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
-	public ResponseEntity<RatingResponseDTO> getRatings(@RequestParam String email) {
-		return new ResponseEntity<RatingResponseDTO>(service.getRatingsByEmail(email), HttpStatus.OK);
+	public ResponseEntity<List<RatingResponseDTO>> getRatings(@RequestParam String email) {
+		return new ResponseEntity<List<RatingResponseDTO>>(service.getRatingsByEmail(email), HttpStatus.OK);
 	}
 }

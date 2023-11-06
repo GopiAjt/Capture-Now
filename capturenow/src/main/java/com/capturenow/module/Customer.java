@@ -4,15 +4,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Data;
 
 @Entity
@@ -39,6 +35,10 @@ public class Customer implements UserDetails{
 	
 	@Column(nullable = false)
 	private long phno;
+
+	@Lob
+	@Column(name = "profile_photo", columnDefinition="LONGBLOB")
+	private byte[] profilePhoto;//required
 	
 	private Date signupDateTime;
 

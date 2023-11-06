@@ -40,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService{
 		
 		if(exist == null)
 		{
-			//emailService.sendToCustomer(c.getEmail(),c);//send email to the user with otp
+			emailService.sendToCustomer(c.getEmail(),c);//send email to the user with otp
 			
 			c.setPassword(encoder.encode(c.getPassword()));//encode the password with BCrypt
 			c.setSignupDateTime(new Date());//set the data time when the account is created
@@ -208,11 +208,21 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public RatingResponseDTO getRatingsByEmail(String email) {
+	public List<RatingResponseDTO> getRatingsByEmail(String email) {
 		Photographer photographer = photographerRepo.findByEmail(email);
 		List<RatingResponseDTO> ratingResponseDTO = new ArrayList<RatingResponseDTO>();
 		List<PhotographerRatings> photographerRatings = photographer.getPhotographerRatings();
-
-		return null;
+		for (PhotographerRatings ratings: photographerRatings) {
+			RatingResponseDTO responseDTO = new RatingResponseDTO();
+			responseDTO.setRating(ratings.getRatings());
+			responseDTO.setComment(ratings.getComments());
+			responseDTO.setCustomerName(ratings.getCustomer().getName());
+			if(null != ratings.getCustomer().getProfilePhoto())
+			{
+				responseDTO.setCustomerProfilePhoto(ImageUtils.decompressImage(ratings.getCustomer().getProfilePhoto()));
+			}
+			ratingResponseDTO.add(responseDTO);
+		}
+		return ratingResponseDTO;
 	}
 }

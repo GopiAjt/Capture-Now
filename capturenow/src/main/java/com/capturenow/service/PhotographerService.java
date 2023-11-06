@@ -2,6 +2,7 @@ package com.capturenow.service;
 
 import java.util.List;
 
+import com.capturenow.dto.PhotographerRegistrationDTO;
 import org.springframework.web.multipart.MultipartFile;
 import com.capturenow.dto.PhotographerUpdateDto;
 import com.capturenow.module.Albums;
@@ -9,7 +10,7 @@ import com.capturenow.module.Photographer;
 
 public interface PhotographerService {
 
-	Photographer photographerSignup(Photographer photographer);
+	Photographer photographerSignup(PhotographerRegistrationDTO photographer);
 	
 	Photographer photographerSignin(String email, String password);
 	
