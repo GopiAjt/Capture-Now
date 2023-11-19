@@ -138,7 +138,10 @@ public class CustomerServiceImpl implements CustomerService{
 			p.setServices(photographer.getServices());
 			p.setServiceLocation(photographer.getServiceLocation());
 			p.setPackages(photographer.getPackages());
-			p.setProfilePhoto(ImageUtils.decompressImage(photographer.getProfilePhoto()));
+			if(photographer.getProfilePhoto() != null)
+			{
+				p.setProfilePhoto(ImageUtils.decompressImage(photographer.getProfilePhoto()));
+			}
 			return p;
 		}
 		return null;
