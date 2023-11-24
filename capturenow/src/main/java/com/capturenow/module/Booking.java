@@ -19,4 +19,6 @@ public class Booking {
 
     private String status;
 
+    private Packages packages;
+
 }
