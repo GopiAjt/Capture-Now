@@ -3,6 +3,7 @@ package com.capturenow.controller;
 import java.util.List;
 
 import com.capturenow.dto.*;
+import com.capturenow.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,8 @@ public class CustomerController {
 	private final JwtService jwtservice;
 
 	private final CustomerRepo customerRepo;
+
+	private final BookingService bookingService;
 	
 	@Qualifier("customer")
 	@Autowired
@@ -140,5 +143,12 @@ public class CustomerController {
 	@PreAuthorize("hasAuthority('ROLE_USER')")
 	public ResponseEntity<List<RatingResponseDTO>> getRatings(@RequestParam String email) {
 		return new ResponseEntity<List<RatingResponseDTO>>(service.getRatingsByEmail(email), HttpStatus.OK);
+	}
+
+	@PostMapping(path = "/createBooking")
+	@PreAuthorize("hasAuthority('ROLE_USER')")
+	public ResponseEntity<String> createBooking() {
+
+		return new ResponseEntity<String>(bookingService.createBooking(), HttpStatus.OK);
 	}
 }

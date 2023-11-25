@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,6 +40,10 @@ public class Customer implements UserDetails{
 	@Lob
 	@Column(name = "profile_photo", columnDefinition="LONGBLOB")
 	private byte[] profilePhoto;//required
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
+	private List<Booking> booking;
 	
 	private Date signupDateTime;
 

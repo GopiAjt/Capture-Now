@@ -79,6 +79,10 @@ public class Photographer implements UserDetails{
 	@OneToMany(mappedBy = "photographer", cascade = CascadeType.PERSIST)
 	private List<Packages> Packages;
 
+	@JsonManagedReference
+	@OneToMany(mappedBy = "photographer", cascade = CascadeType.PERSIST)
+	private List<Booking> bookings;
+
 	@OneToMany(mappedBy = "photographer", cascade =  CascadeType.PERSIST)
 	private List<PhotographerRatings> photographerRatings;
 	

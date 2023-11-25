@@ -1,7 +1,7 @@
 package com.capturenow.module;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
@@ -18,5 +18,18 @@ public class Booking {
     private Date endDate;
 
     private String status;
+
+    @OneToOne
+    private Packages packages;
+
+    @JsonBackReference
+    @JoinColumn
+    @ManyToOne
+    private Photographer photographer;
+
+    @JsonBackReference
+    @JoinColumn
+    @ManyToOne
+    private Customer customer;
 
 }
