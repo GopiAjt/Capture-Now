@@ -63,7 +63,9 @@ public class SecurityConfig {
 				.permitAll()
 				.and()
 				.authorizeHttpRequests().requestMatchers("/customer/getPhotographers","/customer/getPhotographerByEmail",
-						"/customer/getEquipmentsByEmail", "/customer/getAlbumsByEmail","/customer/addReview","/customer/getReviews", "/photographer/add","/photographer/addpackage")
+						"/customer/getEquipmentsByEmail", "/customer/getAlbumsByEmail","/customer/addReview","/customer/getReviews",
+						"/customer/getPackages","/customer/createBooking",
+						"/photographer/add","/photographer/addpackage")
 				.authenticated().and()
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

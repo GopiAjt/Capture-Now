@@ -1,9 +1,13 @@
 package com.capturenow.controller;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import com.capturenow.dto.*;
+import com.capturenow.module.Packages;
 import com.capturenow.service.BookingService;
+import com.capturenow.service.PackageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -42,6 +46,8 @@ public class CustomerController {
 	private final CustomerRepo customerRepo;
 
 	private final BookingService bookingService;
+
+	private final PackageService packageService;
 	
 	@Qualifier("customer")
 	@Autowired
@@ -145,10 +151,16 @@ public class CustomerController {
 		return new ResponseEntity<List<RatingResponseDTO>>(service.getRatingsByEmail(email), HttpStatus.OK);
 	}
 
+	@GetMapping(path = "/getPackages")
+	@PreAuthorize("hasAuthority('ROLE_USER')")
+	public ResponseEntity<List<Packages>> getPackagesByEmail(@RequestParam String email) {
+		return new ResponseEntity<List<Packages>>(packageService.getAllPackages(email), HttpStatus.OK);
+	}
+
 	@PostMapping(path = "/createBooking")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
-	public ResponseEntity<String> createBooking() {
+	public ResponseEntity<String> createBooking(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate, @RequestParam int packageId, @RequestParam String customerId, @RequestParam String photographerId) {
 
-		return new ResponseEntity<String>(bookingService.createBooking(), HttpStatus.OK);
+		return new ResponseEntity<String>(bookingService.createBooking(startDate, endDate, packageId, customerId, photographerId), HttpStatus.OK);
 	}
 }
