@@ -34,10 +34,10 @@ public class EmailService {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setText("Your otp to verify your email is "+ c.getSignupVerificationKey(), true);
+            helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: "+ c.getSignupVerificationKey() + "<br><br>Sincerely,<br><br>CaptureNow", true);
             helper.setTo(to);
-            helper.setSubject("Confirm your email");
-            helper.setFrom("capturenow.io@gmail.com");
+            helper.setSubject("Confirm your email id");
+            helper.setFrom("capturenow.in@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
@@ -53,10 +53,10 @@ public class EmailService {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setText("Your otp to verify your email is "+ p.getSignupVerificationKey(), true);
+            helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: "+ p.getSignupVerificationKey() + "<br><br>Sincerely,<br><br>CaptureNow", true);
             helper.setTo(to);
-            helper.setSubject("Confirm your email");
-            helper.setFrom("capturenow.io@gmail.com");
+            helper.setSubject("Confirm your email id");
+            helper.setFrom("capturenow.in@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
@@ -67,7 +67,7 @@ public class EmailService {
     public static int otpGanaretor()
     {
     	Random r = new Random();
-    	int otp = r.nextInt(1000, 9999);
+    	int otp = r.nextInt(100000, 999999);
     	return otp;
     }
 }

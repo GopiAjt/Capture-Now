@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.capturenow.dto.*;
+import com.capturenow.module.Booking;
 import com.capturenow.module.Packages;
 import com.capturenow.service.BookingService;
 import com.capturenow.service.PackageService;
@@ -144,7 +145,6 @@ public class CustomerController {
             return new ResponseEntity<>("Failed to add rating",  HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
 	@GetMapping(path = "/getReviews")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
 	public ResponseEntity<List<RatingResponseDTO>> getRatings(@RequestParam String email) {
@@ -162,5 +162,11 @@ public class CustomerController {
 	public ResponseEntity<String> createBooking(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate, @RequestParam int packageId, @RequestParam String customerId, @RequestParam String photographerId) {
 
 		return new ResponseEntity<String>(bookingService.createBooking(startDate, endDate, packageId, customerId, photographerId), HttpStatus.OK);
+	}
+
+	@GetMapping(path = "/getBookingStatus")
+	@PreAuthorize("hasAuthority('ROLE_USER')")
+	public ResponseEntity<List<Booking>> getBookingStatus(@RequestParam String email) {
+		return new ResponseEntity<List<Booking>>(bookingService.getBookingStatus(email), HttpStatus.OK);
 	}
 }

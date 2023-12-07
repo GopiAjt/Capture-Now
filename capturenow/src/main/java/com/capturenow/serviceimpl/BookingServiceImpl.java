@@ -1,6 +1,7 @@
 package com.capturenow.serviceimpl;
 
 import com.capturenow.module.Booking;
+import com.capturenow.module.Customer;
 import com.capturenow.repository.BookingRepo;
 import com.capturenow.repository.CustomerRepo;
 import com.capturenow.repository.PackageRepo;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -44,5 +46,15 @@ public class BookingServiceImpl implements BookingService {
         booking.setCustomer(customerRepo.findByEmail(customerId));
         bookingRepo.save(booking);
         return "saved";
+    }
+
+    @Override
+    public List<Booking> getBookingStatus(String email) {
+        Customer customer = customerRepo.findByEmail(email);
+        if (customer != null){
+            List<Booking> booking = customer.getBooking();
+            return booking;
+        }
+        return null;
     }
 }
