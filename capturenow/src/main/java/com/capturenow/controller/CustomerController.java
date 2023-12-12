@@ -37,7 +37,7 @@ import lombok.extern.log4j.Log4j2;
 @RestController
 @Data
 @RequestMapping(path = "/customer")
-@CrossOrigin(origins = "http://127.0.0.1:5502")
+@CrossOrigin(origins = "http://127.0.0.1:5505")
 public class CustomerController {
 
 	private final CustomerService service;
@@ -55,14 +55,22 @@ public class CustomerController {
 	private final AuthenticationManager authenticationManager;
 
 	//localhost:8080/customer/signup
-	@PostMapping(path = "/signup")
-	ResponseEntity<Customer> customerSignUp(@RequestBody Customer c)
-	{
-		Customer customer = service.customerRegister(c);
-		if(customer!= null)
-			return new ResponseEntity<Customer>(customer, HttpStatus.CREATED);
-		return new ResponseEntity<Customer>(customer,HttpStatus.CONFLICT);
+	@PostMapping(path = "/signup", consumes = "application/json")
+	ResponseEntity<Customer> customerSignUp(@RequestBody CustomerSignupDto c) {
+		try {
+			Customer customer = service.customerRegister(c);
+			if (customer != null) {
+				return new ResponseEntity<>(customer, HttpStatus.CREATED);
+			} else {
+				// Return a generic error response without revealing sensitive details
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			// Handle unexpected errors gracefully
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
+
 
 	@GetMapping(path = "/validate")
 //	@PreAuthorize("hasAuthority('ROLE_USER')")
@@ -109,6 +117,12 @@ public class CustomerController {
 	@GetMapping(path = "/getPhotographers")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
 	public ResponseEntity<List<PhotographerCardDto>> getAllPhotographers()
+	{
+		return new ResponseEntity<List<PhotographerCardDto>>(service.getAllPhotographers(), HttpStatus.OK);
+	}
+
+	@GetMapping(path = "/getPhotographersIndex")
+	public ResponseEntity<List<PhotographerCardDto>> getAllPhotographersIndex()
 	{
 		return new ResponseEntity<List<PhotographerCardDto>>(service.getAllPhotographers(), HttpStatus.OK);
 	}

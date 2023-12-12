@@ -35,7 +35,7 @@ public class Customer implements UserDetails{
 	private String password;
 	
 	@Column(nullable = false)
-	private long phno;
+	private long phoneNo;
 
 	@Lob
 	@Column(name = "profile_photo", columnDefinition="LONGBLOB")

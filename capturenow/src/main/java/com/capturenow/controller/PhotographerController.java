@@ -41,7 +41,7 @@ import lombok.extern.log4j.Log4j2;
 @RestController
 @Data
 @RequestMapping(path = "/photographer")
-@CrossOrigin(origins = "http://127.0.0.1:5501")
+@CrossOrigin(origins = "http://127.0.0.1:5505")
 public class PhotographerController {
 
 	@Autowired

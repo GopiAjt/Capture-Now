@@ -59,7 +59,7 @@ public class SecurityConfig {
 				.securityMatcher(AntPathRequestMatcher.antMatcher("/customer/**"))
 				.authorizeHttpRequests()
 				.requestMatchers("/customer/signup","/customer/signin","/customer/authtoken","/customer/validate",
-						"/photographer/signup","/photographer/validate","/photographer/signin","/photographer/authtoken")
+						"/photographer/signup","/photographer/validate","/photographer/signin","/photographer/authtoken", "/customer/getPhotographersIndex")
 				.permitAll()
 				.and()
 				.authorizeHttpRequests().requestMatchers("/customer/getPhotographers","/customer/getPhotographerByEmail",
@@ -139,7 +139,7 @@ public class SecurityConfig {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource(HttpServletRequest request) {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://127.0.0.1:5502"));
+		configuration.setAllowedOrigins(List.of("http://127.0.0.1:5505"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setAllowedMethods(List.of("GET","POST","PUT","DELETE"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

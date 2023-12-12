@@ -35,18 +35,23 @@ public class CustomerServiceImpl implements CustomerService{
 	private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();//to encode and decode the password
 	
 	@Override
-	public Customer customerRegister(Customer c) {
+	public Customer customerRegister(CustomerSignupDto c) {
 		Customer exist = repo.findByEmail(c.getEmail());//check if the user with email allready exists
 		
 		if(exist == null)
 		{
-			emailService.sendToCustomer(c.getEmail(),c);//send email to the user with otp
-			
-			c.setPassword(encoder.encode(c.getPassword()));//encode the password with BCrypt
-			c.setSignupDateTime(new Date());//set the data time when the account is created
-			c.setStatus(false);//set otp verification status as false
-			c.setLogin(false);//set login status as false
-			return repo.save(c);//save the data into the data base
+			Customer customer = new Customer();
+			customer.setName(c.getName());
+			customer.setEmail(c.getEmail());
+			customer.setPhoneNo(c.getPhoneNo());
+
+			emailService.sendToCustomer(c.getEmail(),customer);//send email to the user with otp
+
+			customer.setPassword(encoder.encode(c.getPassword()));//encode the password with BCrypt
+			customer.setSignupDateTime(new Date());//set the data time when the account is created
+			customer.setStatus(false);//set otp verification status as false
+			customer.setLogin(false);//set login status as false
+			return repo.save(customer);//save the data into the database
 		}
 		else
 		{

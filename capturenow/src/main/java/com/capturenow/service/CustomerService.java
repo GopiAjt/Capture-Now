@@ -7,7 +7,7 @@ import com.capturenow.module.Customer;
 
 public interface CustomerService {
 	
-	Customer customerRegister(Customer c);
+	Customer customerRegister(CustomerSignupDto c);
 	
 	Customer customerLogin(String email, String password);
 
