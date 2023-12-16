@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.capturenow.dto.PhotographerRegistrationDTO;
+import com.capturenow.dto.ResetPasswordDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -208,17 +209,36 @@ public class PhotographerServiceImpl implements PhotographerService{
 		return "information updated";
 	}
 
+	@Override
+	public String generateResetPasswordOtp(String emailId) {
+		Photographer photographer = repo.findByEmail(emailId);
+		if (photographer != null) {
+			emailService.sendResetPasswordOtpToCustomer(photographer.getEmail(), photographer);
+		}
+		return "Invalid Email Id";
+	}
+
 
 	@Override
-	public String resetPassword(String email, String password) {
-		Photographer p = repo.findByEmail(email);
+	public String resetPassword(ResetPasswordDto resetPasswordDto) {
+		Photographer p = repo.findByEmail(resetPasswordDto.getEmailId());
 		if(p != null)
 		{
-			p.setPassword(password);
-			repo.save(p);
-			return "password updated";
+			if (p.getResetPasswordVerificationKey() == resetPasswordDto.getOtp())
+			{
+				if (encoder.matches(resetPasswordDto.getOldPassword(), p.getPassword())){
+					p.setPassword(encoder.encode(resetPasswordDto.getNewPassword()));
+					repo.save(p);
+				}
+				else {
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid Password");
+				}
+				return "password updated";
+			}
+			else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Otp");
+			}
 		}
 		return "wrong email";
 	}
-
 }

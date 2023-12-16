@@ -1,19 +1,17 @@
 package com.capturenow.email;
 
+import com.capturenow.repository.PhotographerRepo;
 import lombok.AllArgsConstructor;
 
 import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import com.capturenow.module.Customer;
 import com.capturenow.module.Photographer;
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -26,6 +24,8 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
+    private final PhotographerRepo photographerRepo;
+
     @Async
     public void sendToCustomer(String to, Customer c) {
     	
@@ -34,7 +34,7 @@ public class EmailService {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: "+ c.getSignupVerificationKey() + "<br><br>Sincerely,<br><br>CaptureNow", true);
+            helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: <h1 style='color:blue;'>"+ c.getSignupVerificationKey() + "</h1><br><br>Sincerely,<br><br>CaptureNow", true);
             helper.setTo(to);
             helper.setSubject("Confirm your email id");
             helper.setFrom("capturenow.in@gmail.com");
@@ -53,7 +53,7 @@ public class EmailService {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: "+ p.getSignupVerificationKey() + "<br><br>Sincerely,<br><br>CaptureNow", true);
+            helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: <h1 style='color:blue;'>"+ p.getSignupVerificationKey() + "</h1><br><br>Sincerely,<br><br>CaptureNow", true);
             helper.setTo(to);
             helper.setSubject("Confirm your email id");
             helper.setFrom("capturenow.in@gmail.com");
@@ -63,11 +63,26 @@ public class EmailService {
             throw new IllegalStateException("failed to send email");
         }
     }
-    
+
+    public void sendResetPasswordOtpToCustomer(String to, Photographer photographer) {
+        photographer.setResetPasswordVerificationKey(otpGanaretor());
+        photographerRepo.save(photographer);
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setText("Hello, <br><br> Just one more step to Reset you password. <br><br> You must confirm your identity using the one-time pass code: <h1 style='color:blue;'>"+ photographer.getResetPasswordVerificationKey() + "</h1><br><br>Sincerely,<br><br>CaptureNow.in", true);
+            helper.setTo(to);
+            helper.setSubject("OTP to Reset Password");
+            helper.setFrom("capturenow.in@gmail.com");
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            LOGGER.error("failed to send email", e);
+            throw new IllegalStateException("failed to send email");
+        }
+    }
     public static int otpGanaretor()
     {
     	Random r = new Random();
-    	int otp = r.nextInt(100000, 999999);
-    	return otp;
+        return r.nextInt(100000, 999999);
     }
 }

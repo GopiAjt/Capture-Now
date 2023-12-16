@@ -3,6 +3,7 @@ package com.capturenow.service;
 import java.util.List;
 
 import com.capturenow.dto.PhotographerRegistrationDTO;
+import com.capturenow.dto.ResetPasswordDto;
 import org.springframework.web.multipart.MultipartFile;
 import com.capturenow.dto.PhotographerUpdateDto;
 import com.capturenow.module.Albums;
@@ -27,6 +28,8 @@ public interface PhotographerService {
 	byte[] changeProfilePhoto(MultipartFile file, String email) throws Exception;
 	
 	String updateBasicInfo(PhotographerUpdateDto photographer);
+
+	String generateResetPasswordOtp(String emailId);
 	
-	String resetPassword(String email, String password);
+	String resetPassword(ResetPasswordDto resetPasswordDto);
 }

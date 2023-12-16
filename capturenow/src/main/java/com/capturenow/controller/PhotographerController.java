@@ -3,7 +3,7 @@ package com.capturenow.controller;
 
 import java.util.List;
 
-import com.capturenow.dto.PhotographerRegistrationDTO;
+import com.capturenow.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -23,9 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.capturenow.config.ImageUtils;
-import com.capturenow.dto.PackageDto;
-import com.capturenow.dto.PhotographerDTO;
-import com.capturenow.dto.PhotographerUpdateDto;
 import com.capturenow.module.Albums;
 import com.capturenow.module.Packages;
 import com.capturenow.module.Photographer;
@@ -210,4 +207,15 @@ public class PhotographerController {
 		return new ResponseEntity<String>(service.updateBasicInfo(photographer), HttpStatus.OK);
 	}
 
+	@PostMapping(path = "/resetPasswordOtp")
+	@PreAuthorize("hasAuthority('ROLE_PHOTOGRAPHER')")
+	public ResponseEntity<String> generatePasswordResetOtp(@RequestParam String emailId) {
+		return new ResponseEntity<String>(service.generateResetPasswordOtp(emailId), HttpStatus.OK);
+	}
+
+	@PostMapping(path = "/resetPassword")
+	@PreAuthorize("hasAuthority('ROLE_PHOTOGRAPHER')")
+	public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+		return new ResponseEntity<String>(service.resetPassword(resetPasswordDto), HttpStatus.OK);
+	}
 }
