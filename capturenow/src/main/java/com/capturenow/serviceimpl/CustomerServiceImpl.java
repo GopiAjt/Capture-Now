@@ -233,4 +233,16 @@ public class CustomerServiceImpl implements CustomerService{
 		}
 		return ratingResponseDTO;
 	}
+
+	@Override
+	public CustomerUpdateDto updateCustomerDetails(CustomerUpdateDto customerUpdateDto) {
+		Customer customer = repo.findByEmail(customerUpdateDto.getEmail());
+		if (customer != null) {
+			customer.setName(customerUpdateDto.getName());
+			customer.setEmail(customerUpdateDto.getEmail());
+			customer.setPhoneNo(customerUpdateDto.getPhoneNo());
+			repo.save(customer);
+		}
+		return customerUpdateDto;
+	}
 }

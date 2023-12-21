@@ -183,4 +183,10 @@ public class CustomerController {
 	public ResponseEntity<List<Booking>> getBookingStatus(@RequestParam String email) {
 		return new ResponseEntity<List<Booking>>(bookingService.getBookingStatus(email), HttpStatus.OK);
 	}
+
+	@PostMapping(path = "/updateDetails")
+	@PreAuthorize("hasAuthority('ROLE_USER')")
+	public ResponseEntity<CustomerUpdateDto> updateCustomerDetails(@RequestBody CustomerUpdateDto customerUpdateDto) {
+		return new ResponseEntity<CustomerUpdateDto>(service.updateCustomerDetails(customerUpdateDto), HttpStatus.OK);
+	}
 }

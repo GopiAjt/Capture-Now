@@ -24,4 +24,6 @@ public interface CustomerService {
 	boolean addReview(RatingDTO ratingDTO);
 
 	List<RatingResponseDTO> getRatingsByEmail(String email);
+
+	CustomerUpdateDto updateCustomerDetails(CustomerUpdateDto customerUpdateDto);
 }
