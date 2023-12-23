@@ -26,4 +26,9 @@ public interface CustomerService {
 	List<RatingResponseDTO> getRatingsByEmail(String email);
 
 	CustomerUpdateDto updateCustomerDetails(CustomerUpdateDto customerUpdateDto);
+
+	String generateResetPasswordOtp(String emailId);
+
+	String resetPassword(ResetPasswordDto resetPasswordDto);
+	
 }

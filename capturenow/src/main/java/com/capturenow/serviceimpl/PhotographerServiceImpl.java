@@ -213,7 +213,7 @@ public class PhotographerServiceImpl implements PhotographerService{
 	public String generateResetPasswordOtp(String emailId) {
 		Photographer photographer = repo.findByEmail(emailId);
 		if (photographer != null) {
-			emailService.sendResetPasswordOtpToCustomer(photographer.getEmail(), photographer);
+			emailService.sendResetPasswordOtpToPhotographer(photographer.getEmail(), photographer);
 		}
 		return "Invalid Email Id";
 	}

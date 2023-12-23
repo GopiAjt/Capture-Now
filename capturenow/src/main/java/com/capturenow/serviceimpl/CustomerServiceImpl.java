@@ -245,4 +245,38 @@ public class CustomerServiceImpl implements CustomerService{
 		}
 		return customerUpdateDto;
 	}
+
+	@Override
+	public String generateResetPasswordOtp(String emailId) {
+
+		Customer customer = repo.findByEmail(emailId);
+		if (customer != null) {
+			emailService.sendResetPasswordOtpToCustomer(customer.getEmail(), customer);
+		}
+		return "Invalid Email Id";
+	}
+
+	@Override
+	public String resetPassword(ResetPasswordDto resetPasswordDto) {
+
+		Customer customer = repo.findByEmail(resetPasswordDto.getEmailId());
+		if(customer != null)
+		{
+			if (customer.getResetPasswordVerificationKey() == resetPasswordDto.getOtp())
+			{
+				if (encoder.matches(resetPasswordDto.getOldPassword(), customer.getPassword())){
+					customer.setPassword(encoder.encode(resetPasswordDto.getNewPassword()));
+					repo.save(customer);
+				}
+				else {
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid Password");
+				}
+				return "password updated";
+			}
+			else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Otp");
+			}
+		}
+		return "wrong email";
+	}
 }
