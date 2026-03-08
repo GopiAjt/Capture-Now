@@ -151,7 +151,7 @@ public class SecurityConfig {
 
 		// Allow multiple origins
 		configuration.setAllowedOrigins(List.of("http://localhost:3000",
-												"http://localhost:3002",
+												"http://localhost:3001",
 												"https://capture-noww.vercel.app/",
 												"https://photographer-capture-now.vercel.app/",
 												"http://127.0.0.1:5505",
