@@ -16,11 +16,13 @@ public class PhotographerResponseDto {
 
     private String email;//required
 
-//    private long phoneNumber;
+    private String pId;
 
     private String serviceLocation;//required
 
     private int experience;//required
+
+    private Double avgRating;
 
     @Lob
     @Column(name = "profile_photo", columnDefinition="LONGBLOB")

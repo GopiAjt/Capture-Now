@@ -1,0 +1,27 @@
+# Git backups
+.git.bak/
+
+# Maven
+target/
+*.class
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+.factorypath
+.springBeans
+.sts4-cache
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
+*.tmp

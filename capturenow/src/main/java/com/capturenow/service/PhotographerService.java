@@ -1,11 +1,11 @@
 package com.capturenow.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.capturenow.dto.PhotographerRegistrationDTO;
-import com.capturenow.dto.ResetPasswordDto;
+import com.capturenow.dto.*;
+import com.capturenow.repository.PhotographerRepo;
 import org.springframework.web.multipart.MultipartFile;
-import com.capturenow.dto.PhotographerUpdateDto;
 import com.capturenow.module.Albums;
 import com.capturenow.module.Photographer;
 
@@ -17,14 +17,6 @@ public interface PhotographerService {
 	
 	Boolean validateEmail(String email, Integer otp);
 	
-	List<Albums> saveAlbum(MultipartFile[] file, String category, String photographerName) throws Exception;
-	
-	List<Albums> downlodeAlbum(String email);
-	
-	List<Albums> downlodeEquipments(String email);
-	
-	String deletePhoto(int id);
-	
 	byte[] changeProfilePhoto(MultipartFile file, String email) throws Exception;
 	
 	String updateBasicInfo(PhotographerUpdateDto photographer);
@@ -32,4 +24,10 @@ public interface PhotographerService {
 	String generateResetPasswordOtp(String emailId);
 	
 	String resetPassword(ResetPasswordDto resetPasswordDto);
+
+	List<RatingResponseDTO> getRatingsByEmail(String email);
+
+	List<PhotographerCardDto> searchPhotographer(String query);
+
+	String forgotPassword(String emailId, String newPassword, Integer otp);
 }

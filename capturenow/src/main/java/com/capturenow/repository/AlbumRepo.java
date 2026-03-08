@@ -8,9 +8,11 @@ import org.springframework.stereotype.Repository;
 import com.capturenow.module.Albums;
 
 @Repository
-public interface AlbumRepo extends JpaRepository<Albums, Integer>{
+public interface AlbumRepo extends JpaRepository<Albums, String>{
 
 	Optional<Albums> findByName(String fileName);
-	
-	Albums findById(int id);
+
+	void deleteById(Integer id);
+
+	Optional<Albums> findById(String id);
 }

@@ -2,6 +2,8 @@ package com.capturenow.dto;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class RatingDTO {
 
@@ -12,5 +14,7 @@ public class RatingDTO {
     private int rating;
 
     private String comment;
+
+    private LocalDateTime dateTime;
 
 }

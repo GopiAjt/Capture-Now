@@ -3,25 +3,23 @@ package com.capturenow.module;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
+import java.util.UUID;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 @Entity
 @Data
+@ToString(exclude = {"albums", "packages", "bookings", "photographerRatings"})
+@Component
 public class Photographer implements UserDetails{
 	
 	/**
@@ -30,8 +28,7 @@ public class Photographer implements UserDetails{
 	private static final long serialVersionUID = -785199701875466283L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private String id;
 	
 	@Column(nullable = false)
 	private String name;//required
@@ -43,12 +40,16 @@ public class Photographer implements UserDetails{
 	private String password;//required
 	
 	private long phoneNumber;
-	
-	private String serviceLocation;//required
-	
-	private Date signupDateTime;
+
+	private Double startsWith;
+
+	private Double avgRating;
+
+	private String serviceLocation;
 
 	private boolean status;
+
+	private Date signupDateTime;
 
 	private int signupVerificationKey;
 
@@ -68,27 +69,37 @@ public class Photographer implements UserDetails{
 	
 	private String languages;//required
 	
-	@Column(length = 500)
+	@Column(length = 5000)
 	private String aboutMe;//required
 	
 	@JsonManagedReference
-	@OneToMany(mappedBy = "photographer", cascade = CascadeType.PERSIST)
-	private List<Albums> Albums;
+	@OneToMany(mappedBy = "photographer",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Albums> albums;
 	
 	@JsonManagedReference
-	@OneToMany(mappedBy = "photographer", cascade = CascadeType.PERSIST)
-	private List<Packages> Packages;
+	@OneToMany( mappedBy = "photographer",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Packages> packages;
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "photographer", cascade = CascadeType.PERSIST)
+	@OneToMany( mappedBy = "photographer",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Booking> bookings;
 
-	@OneToMany(mappedBy = "photographer", cascade =  CascadeType.PERSIST)
+	@JsonManagedReference
+	@OneToMany( mappedBy = "photographer",fetch = FetchType.LAZY, cascade =  CascadeType.ALL, orphanRemoval = true)
 	private List<PhotographerRatings> photographerRatings;
+
+	@JsonManagedReference
+	@OneToOne
+	private PhotographerKycDetails photographerKycDetails;
 	
 	private String role = "ROLE_PHOTOGRAPHER";
 	
 	private String authToken;
+
+	public Photographer(){
+		this.id = generateCustomId();
+		this.avgRating = 0.0;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -125,5 +136,12 @@ public class Photographer implements UserDetails{
 		// TODO Auto-generated method stub
 		return true;
 	}
-	
+
+	private String generateCustomId() {
+		// Implement your custom ID generation logic here
+		// Example: return UUID.randomUUID().toString();
+		// You can use any logic to create a unique identifier
+		return "CN-PG" + UUID.randomUUID().toString();
+	}
+
 }

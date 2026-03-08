@@ -1,34 +1,49 @@
 package com.capturenow.service;
 
-import java.util.List;
-
 import com.capturenow.dto.*;
 import com.capturenow.module.Customer;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.Set;
+
+@Component
 public interface CustomerService {
-	
-	Customer customerRegister(CustomerSignupDto c);
-	
-	Customer customerLogin(String email, String password);
 
-	Boolean validateEmail(String email, Integer otp);
+    Customer customerRegister(CustomerSignupDto c);
 
-	List<PhotographerCardDto> getAllPhotographers();
+    Customer customerLogin(String email, String password);
 
-	PhotographerResponseDto getPhotographerById(String email);
+    Boolean validateEmail(String email, Integer otp);
 
-	List<AlbumResponseDto> getAlbumByEmail(String email);
+    List<PhotographerCardDto> getAllPhotographers();
 
-	List<AlbumResponseDto> getEquipmentsByEmail(String email);
+    Page<PhotographerCardDto> getPhotographersByPagination(int offset, int pageSize);
 
-	boolean addReview(RatingDTO ratingDTO);
+    PhotographerResponseDto getPhotographerById(String email);
 
-	List<RatingResponseDTO> getRatingsByEmail(String email);
+    Page<AlbumResponseDto> getAlbumByEmail(String email, int offset, int pageSize);
 
-	CustomerUpdateDto updateCustomerDetails(CustomerUpdateDto customerUpdateDto);
+    List<AlbumResponseDto> getEquipmentsByEmail(String email);
 
-	String generateResetPasswordOtp(String emailId);
+    boolean addReview(RatingDTO ratingDTO);
 
-	String resetPassword(ResetPasswordDto resetPasswordDto);
-	
+    List<RatingResponseDTO> getRatingsById(String id);
+
+    Boolean deleteRatingById(String ratingId);
+
+    CustomerUpdateDto updateCustomerDetails(CustomerUpdateDto customerUpdateDto);
+
+    Boolean generateResetPasswordOtp(String emailId);
+
+    String resetPassword(ResetPasswordDto resetPasswordDto);
+
+    String forgotPassword(String emailId, String newPassword, Integer otp);
+
+    byte[] changeProfilePhoto(MultipartFile file, String email) throws Exception;
+
+    Page<PhotographerCardDto> addFilter(Integer offset, Integer pageSize, Integer field);
+
 }

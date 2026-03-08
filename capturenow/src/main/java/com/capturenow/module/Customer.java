@@ -1,8 +1,6 @@
 package com.capturenow.module;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -22,8 +20,7 @@ public class Customer implements UserDetails{
 	private static final long serialVersionUID = 232556590466188952L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private String id;
 	
 	@Column(nullable = false)
 	private String name;
@@ -42,8 +39,12 @@ public class Customer implements UserDetails{
 	private byte[] profilePhoto;//required
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "customer", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	private List<Booking> booking;
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<Favorites> favorites;
 	
 	private Date signupDateTime;
 
@@ -60,6 +61,10 @@ public class Customer implements UserDetails{
 	private String authToken;
 	
 	private String role = "ROLE_USER";
+
+	public Customer(){
+		this.id = generateCustomId();
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -95,6 +100,13 @@ public class Customer implements UserDetails{
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	private String generateCustomId() {
+		// Implement your custom ID generation logic here
+		// Example: return UUID.randomUUID().toString();
+		// You can use any logic to create a unique identifier
+		return "CN-C" + UUID.randomUUID().toString();
 	}
 	
 }

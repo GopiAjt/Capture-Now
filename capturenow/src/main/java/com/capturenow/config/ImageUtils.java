@@ -33,6 +33,9 @@ public class ImageUtils {
 	
 	public static byte[] decompressImage(byte[] data)
 	{
+		if (data == null) {
+			return null;
+		}
 		Inflater inflater = new Inflater();
 		inflater.setInput(data);
 		ByteArrayOutputStream  arrayOutputStream = new ByteArrayOutputStream(data.length);

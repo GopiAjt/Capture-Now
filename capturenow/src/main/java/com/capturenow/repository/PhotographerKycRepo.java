@@ -1,11 +1,10 @@
 package com.capturenow.repository;
 
+import com.capturenow.module.PhotographerKycDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.capturenow.module.Packages;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
-public interface PackageRepo extends JpaRepository<Packages, String>{
-    void delete(Packages entity);
+public interface PhotographerKycRepo extends JpaRepository<PhotographerKycDetails, String> {
+
 }

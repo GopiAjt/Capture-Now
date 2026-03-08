@@ -59,13 +59,16 @@ public class SecurityConfig {
 				.securityMatcher(AntPathRequestMatcher.antMatcher("/customer/**"))
 				.authorizeHttpRequests()
 				.requestMatchers("/customer/signup","/customer/signin","/customer/authtoken","/customer/validate",
-						"/photographer/signup","/photographer/validate","/photographer/signin","/photographer/authtoken", "/customer/getPhotographersIndex")
+						"/photographer/signup","/photographer/validate","/photographer/signin","/photographer/authtoken",
+						"/customer/getPhotographersIndex/{offset}/{pageSize}", "/customer/addFilter/{offset}/{pageSize}/{field}",
+						"/customer/forgotPasswordOtp","/customer/forgotPassword", "/customer/searchByPreference", "/customer/health")
 				.permitAll()
 				.and()
-				.authorizeHttpRequests().requestMatchers("/customer/getPhotographers","/customer/getPhotographerByEmail",
-						"/customer/getEquipmentsByEmail", "/customer/getAlbumsByEmail","/customer/addReview","/customer/getReviews",
-						"/customer/getPackages","/customer/createBooking","/customer/updateDetails",
-						"/photographer/add","/photographer/addpackage" )
+				.authorizeHttpRequests().requestMatchers("/customer/getPhotographers/{offset}/{pageSize}","/customer/getPhotographerById",
+						"/customer/getEquipmentsById", "/customer/getAlbumsById","/customer/addReview","/customer/getReviewsById", "/customer/deleteReviewsById",
+						"/customer/getPackages","/customer/createBooking", "/customer/getBookingStatus", "/customer/updateDetails",
+						"/customer/searchByLocation", "/customer/resetPasswordOtp", "/customer/resetPassword", "/customer/changePhoto",
+						"/customer/addToFavorites", "/customer/removeFromFavorites","/customer/getAllFavorites","/customer/cancelBooking")
 				.authenticated().and()
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -82,11 +85,17 @@ public class SecurityConfig {
 				.cors(Customizer.withDefaults())
 				.securityMatcher(AntPathRequestMatcher.antMatcher("/photographer/**"))
 				.authorizeHttpRequests()
-				.requestMatchers("/customer/signup","/customer/authtoken","/customer/validate","/photographer/signup","/photographer/validate","/photographer/signin","/photographer/authtoken")
+				.requestMatchers("/customer/signup","/customer/authtoken","/customer/validate","/photographer/signup",
+						"/photographer/validate","/photographer/Login","/photographer/authtoken","/photographer/searchPhotographers",
+						"/photographer/forgotPassword","/photographer/forgotPasswordOtp")
 				.permitAll()
 				.and()
-				.authorizeHttpRequests().requestMatchers("/album/**","/customer/getPhotographers","/photographer/add","/photographer/deletePackage","/photographer/getPackages","/photographer/updateBasicInfo",
-						"/photographer/addpackage","/photographer/getAlbums","/photographer/getEquipment","/photographer/changePhoto","/photographer/deletePhoto", "/photographer/resetPasswordOtp", "/photographer/resetPassword")
+				.authorizeHttpRequests().requestMatchers("/photographer/addAlbums",
+						"/photographer/deletePackage","/photographer/getPackages","/photographer/updateProfileInfo",
+						"/photographer/addPackage","/photographer/getAlbums","/photographer/getEquipment","/photographer/changePhoto",
+						"/photographer/deletePhoto","/photographer/resetPasswordOtp", "/photographer/resetPassword",
+						"/photographer/getReviews", "/photographer/getBookingStatus", "/photographer/acceptDeclineBooking",
+						"/photographer/addKycDetails")
 				.authenticated().and()
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -135,22 +144,28 @@ public class SecurityConfig {
 		authProvider.setPasswordEncoder(passwordEncoder());
 		return new ProviderManager(authProvider);
 	}
-	
+
 	@Bean
 	CorsConfigurationSource corsConfigurationSource(HttpServletRequest request) {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://127.0.0.1:5505"));
+
+		// Allow multiple origins
+		configuration.setAllowedOrigins(List.of("http://localhost:3000",
+												"http://localhost:3002",
+												"https://capture-noww.vercel.app/",
+												"https://photographer-capture-now.vercel.app/",
+												"http://127.0.0.1:5505",
+												"http://localhost:5173"));
+
 		configuration.setAllowedHeaders(List.of("*"));
-		configuration.setAllowedMethods(List.of("GET","POST","PUT","DELETE"));
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+		// Allow credentials if needed
+		configuration.setAllowCredentials(true);
+
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
-	
-//	@Bean
-//    public MultipartResolver multipartResolver() {
-//        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-//        resolver.setDefaultEncoding("UTF-8");
-//        return resolver;
-//    }
+
 }

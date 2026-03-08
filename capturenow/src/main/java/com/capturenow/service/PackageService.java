@@ -9,7 +9,7 @@ public interface PackageService {
 	
 	List<Packages> addPackage(PackageDto p);
 	
-	String deletePackage(int id);
+	String deletePackage(String id);
 	
 	List<Packages> getAllPackages(String email);
 	

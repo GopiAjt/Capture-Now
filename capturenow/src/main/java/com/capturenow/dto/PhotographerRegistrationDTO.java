@@ -19,15 +19,4 @@ public class PhotographerRegistrationDTO {
 
     private long phoneNumber;
 
-    private String serviceLocation;//required
-
-    private int experience;//required
-
-    private String services;//required
-
-    private String languages;//required
-
-    @Column(length = 500)
-    private String aboutMe;//required
-
 }

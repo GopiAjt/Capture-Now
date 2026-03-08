@@ -29,6 +29,12 @@ public class EmailService {
 
     private final CustomerRepo customerRepo;
 
+    public static int otpGanaretor()
+    {
+        Random r = new Random();
+        return r.nextInt(100000, 999999);
+    }
+
     @Async
     public void sendToCustomer(String to, Customer c) {
     	
@@ -100,9 +106,61 @@ public class EmailService {
             throw new IllegalStateException("failed to send email");
         }
     }
-    public static int otpGanaretor()
-    {
-    	Random r = new Random();
-        return r.nextInt(100000, 999999);
+
+    public void sendBookNotificationToPhotographer(String to, Photographer photographer){
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setText(
+                    "Knock! Knock!. <br><br>Hello, "+photographer.getName()+" <br><br> You have a Booking "+
+                            "<br><br>Please go to you Dashboard to Accept the Booking<br><br>CaptureNow.in", true);
+            helper.setTo(to);
+            helper.setSubject("Alert! you got an order");
+            helper.setFrom("capturenow.in@gmail.com");
+            mailSender.send(mimeMessage);
+        }catch (MessagingException e) {
+            LOGGER.error("failed to send email", e);
+            throw new IllegalStateException("failed to send email");
+        }
     }
+
+    public void sendBookingConfirmationToCustomer(String to, Customer customer){
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setText(
+                    "Knock! Knock!. <br><br>" +
+                            "Hello, " +customer.getName()+
+                            "<br><br> Your Booking has been confirmed by the photographer                                                                                                                        "+
+                            "<br><br>Please go to you Dashboard to Pay and contact with the Photographer" +
+                            "<br><br>CaptureNow.in", true);
+            helper.setTo(to);
+            helper.setSubject("Your Booking is confirmed!");
+            helper.setFrom("capturenow.in@gmail.com");
+            mailSender.send(mimeMessage);
+        }catch (MessagingException e) {
+            LOGGER.error("failed to send email", e);
+            throw new IllegalStateException("failed to send email");
+        }
+    }
+    public void sendBookingDeclineToCustomer(String to, Customer customer){
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setText(
+                    "Knock! Knock!. <br><br>" +
+                            "Hello, " +customer.getName()+
+                            "<br><br>we are sorry to inform you that                                                                                                                        "+
+                            "<br><br>Your Booking has been Declined by the photographer" +
+                            "<br><br>CaptureNow.in", true);
+            helper.setTo(to);
+            helper.setSubject("Your Booking is declined!");
+            helper.setFrom("capturenow.in@gmail.com");
+            mailSender.send(mimeMessage);
+        }catch (MessagingException e) {
+            LOGGER.error("failed to send email", e);
+            throw new IllegalStateException("failed to send email");
+        }
+    }
+
 }

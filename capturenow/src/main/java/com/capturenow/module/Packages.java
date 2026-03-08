@@ -2,42 +2,49 @@ package com.capturenow.module;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
+
+import java.util.UUID;
 
 @Entity
 @Data
+@ToString(exclude = "photographer")
 public class Packages {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	
+	@Column
+	private String id;
+
 	private String packageName;
 	
 	private String category;
 
-	private int eventRate;
+	private Double eventRate;
 	
-	private int oneDayRate;
+	private Double oneDayRate;
 	
-	private int oneHourRate;
+	private Double oneHourRate;
 	
-	private int videoRate;
-	
+	private Double videoRate;
 
     @Column(length = 4000)
 	private String description;
 
 	@JsonBackReference
-	@JoinColumn
 	@ManyToOne
 	private Photographer photographer;
+
+	public Packages(){
+		this.id = generateCustomId();
+	}
+
+	private String generateCustomId() {
+		// Implement your custom ID generation logic here
+		// Example: return UUID.randomUUID().toString();
+		// You can use any logic to create a unique identifier
+		return "CN-P" + UUID.randomUUID();
+	}
 	
 }

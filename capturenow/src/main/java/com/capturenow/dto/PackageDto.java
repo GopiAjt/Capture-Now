@@ -19,13 +19,13 @@ public class PackageDto implements Serializable{
 
 	private String category;
 
-	private int eventRate;
+	private Double eventRate;
 
-	private int oneDayRate;
+	private Double oneDayRate;
 
-	private int oneHourRate;
+	private Double oneHourRate;
 
-	private int videoRate;
+	private Double videoRate;
 
 	private String description;
 

@@ -16,7 +16,7 @@ public class StorageService {
 	@Autowired
 	private AlbumRepo repo;
 
-	public Albums uplodeImage(MultipartFile file, String category, Photographer name) throws Exception
+	public Albums uploadeImage(MultipartFile file, String category, Photographer name) throws Exception
 	{
 		Albums album = repo.save(Albums.builder()
 				.name(file.getOriginalFilename())
