@@ -25,7 +25,7 @@ public class Albums {
 	private String type;
 	
 	@Lob
-	@Column(name = "photo", columnDefinition="LONGBLOB")
+	@Column(name = "photo")
 	private byte[] photo;
 	
 	private String category;

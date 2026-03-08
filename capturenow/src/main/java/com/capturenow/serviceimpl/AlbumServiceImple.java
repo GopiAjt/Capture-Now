@@ -8,7 +8,6 @@ import com.capturenow.repository.PhotographerRepo;
 import com.capturenow.service.AlbumService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

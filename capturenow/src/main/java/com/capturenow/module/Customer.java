@@ -35,7 +35,7 @@ public class Customer implements UserDetails{
 	private long phoneNo;
 
 	@Lob
-	@Column(name = "profile_photo", columnDefinition="LONGBLOB")
+	@Column(name = "profile_photo")
 	private byte[] profilePhoto;//required
 
 	@JsonManagedReference

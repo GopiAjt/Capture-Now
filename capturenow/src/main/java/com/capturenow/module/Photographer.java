@@ -62,7 +62,7 @@ public class Photographer implements UserDetails{
 	private int experience;//required
 	
 	@Lob
-	@Column(name = "profile_photo", columnDefinition="LONGBLOB")
+	@Column(name = "profile_photo")
 	private byte[] profilePhoto;//required
 	
 	private String services;//required

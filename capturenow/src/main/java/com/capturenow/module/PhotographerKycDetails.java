@@ -16,11 +16,11 @@ public class PhotographerKycDetails {
     private String ifscCode;
 
     @Lob
-    @Column(columnDefinition="LONGBLOB")
+    @Column(name = "id_proof_image")
     private byte[] idProofImage;
 
     @Lob
-    @Column(columnDefinition="LONGBLOB")
+    @Column(name = "studio_licence")
     private byte[] studioLicence;
 
     private Boolean kycStatus;
