@@ -16,7 +16,7 @@ public class PhotographerUserDetailsService implements UserDetailsService{
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Photographer p = photographerRepo.findByEmail(username);
+		Photographer p = photographerRepo.findByEmail(username.trim().toLowerCase());
 		if(p != null)
 		{
 			return p;

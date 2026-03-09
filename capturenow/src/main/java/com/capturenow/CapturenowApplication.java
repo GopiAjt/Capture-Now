@@ -7,7 +7,10 @@ import org.springframework.context.annotation.ComponentScan;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
+import org.springframework.scheduling.annotation.EnableAsync;
+
 @SpringBootApplication
+@EnableAsync
 @ComponentScan(basePackages = "com.capturenow")
 
 public class CapturenowApplication {

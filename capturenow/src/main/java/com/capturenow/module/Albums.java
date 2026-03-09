@@ -3,8 +3,6 @@ package com.capturenow.module;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,9 +24,7 @@ public class Albums {
 	
 	private String type;
 	
-	@Lob
-	@JdbcTypeCode(SqlTypes.BINARY)
-	@Column(name = "photo")
+	@Column(name = "photo", columnDefinition = "bytea")
 	private byte[] photo;
 	
 	private String category;

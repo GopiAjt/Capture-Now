@@ -1,8 +1,6 @@
 package com.capturenow.module;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import lombok.Data;
 import java.util.UUID;
 
@@ -17,14 +15,10 @@ public class PhotographerKycDetails {
 
     private String ifscCode;
 
-    @Lob
-    @JdbcTypeCode(SqlTypes.BINARY)
-    @Column(name = "id_proof_image")
+    @Column(name = "id_proof_image", columnDefinition = "bytea")
     private byte[] idProofImage;
 
-    @Lob
-    @JdbcTypeCode(SqlTypes.BINARY)
-    @Column(name = "studio_licence")
+    @Column(name = "studio_licence", columnDefinition = "bytea")
     private byte[] studioLicence;
 
     private Boolean kycStatus;

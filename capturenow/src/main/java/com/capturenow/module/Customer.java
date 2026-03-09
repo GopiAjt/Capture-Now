@@ -4,8 +4,6 @@ import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,9 +34,7 @@ public class Customer implements UserDetails{
 	@Column(nullable = false)
 	private long phoneNo;
 
-	@Lob
-	@JdbcTypeCode(SqlTypes.BINARY)
-	@Column(name = "profile_photo")
+	@Column(name = "profile_photo", columnDefinition = "bytea")
 	private byte[] profilePhoto;//required
 
 	@JsonManagedReference
