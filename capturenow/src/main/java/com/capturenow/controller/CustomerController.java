@@ -269,7 +269,7 @@ public class CustomerController {
         return new ResponseEntity<>(service.forgotPassword(emailId, newPassword, otp), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/changePhoto")
+    @PostMapping(path = "/changePhoto", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<byte[]> changePhoto(@RequestParam MultipartFile image, @RequestParam String email)
     {

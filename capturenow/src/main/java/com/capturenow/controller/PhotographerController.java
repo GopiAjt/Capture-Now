@@ -118,7 +118,7 @@ public class PhotographerController {
 		return "false";
 	}
 
-	@PostMapping(path = "/addAlbums")
+	@PostMapping(path = "/addAlbums", consumes = "multipart/form-data")
 	@PreAuthorize("hasAuthority('ROLE_PHOTOGRAPHER')")
 	public ResponseEntity<List<Albums>> createAlbum(@RequestParam MultipartFile[] file,
 													@RequestParam String category,
@@ -182,7 +182,7 @@ public class PhotographerController {
 		return new ResponseEntity<String>(albumService.deleteAlbumById(id), HttpStatus.OK);
 	}
 
-	@PostMapping(path = "/changePhoto")
+	@PostMapping(path = "/changePhoto", consumes = "multipart/form-data")
 	@PreAuthorize("hasAuthority('ROLE_PHOTOGRAPHER')")
 	public ResponseEntity<byte[]> changePhoto(@RequestParam MultipartFile image, @RequestParam String email) {
 		try {
@@ -242,7 +242,7 @@ public class PhotographerController {
 		return new ResponseEntity<Boolean>(bookingService.acceptDeclineBooking(status, bookingId), HttpStatus.OK);
 	}
 
-	@PutMapping(path = "/addKycDetails")
+	@PutMapping(path = "/addKycDetails", consumes = "multipart/form-data")
 	@PreAuthorize("hasAuthority('ROLE_PHOTOGRAPHER')")
 	public ResponseEntity<String> addKycDetails(@RequestParam Long bankAccountNumber, @RequestParam String ifscCode, @RequestParam MultipartFile idProofImage, @RequestParam(required = false) MultipartFile studioLicence, @RequestParam String emailId) throws Exception {
 		return new ResponseEntity<String>(kycService.addKycDetails(bankAccountNumber, ifscCode, idProofImage, studioLicence, emailId), HttpStatus.OK);
