@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.UUID;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -62,6 +64,7 @@ public class Photographer implements UserDetails{
 	private int experience;//required
 	
 	@Lob
+	@JdbcTypeCode(SqlTypes.BINARY)
 	@Column(name = "profile_photo")
 	private byte[] profilePhoto;//required
 	

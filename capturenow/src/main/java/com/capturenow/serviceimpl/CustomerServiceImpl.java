@@ -48,8 +48,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer customerRegister(CustomerSignupDto c) {
+        String cleanedEmail = c.getEmail().trim().toLowerCase();
         // Check if a user with the given email already exists
-        Customer exist = repo.findByEmail(c.getEmail());
+        Customer exist = repo.findByEmail(cleanedEmail);
 
         if (exist != null) {
             throw  new ResponseStatusException(HttpStatus.FORBIDDEN, "Email already exists. Please verify your email or use a different one.");
@@ -57,30 +58,27 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer customer = new Customer();
         customer.setName(c.getName());
-        customer.setEmail(c.getEmail());
+        customer.setEmail(cleanedEmail);
         customer.setPhoneNo(c.getPhoneNo());
 
-        try {
-            // Send OTP email
-            emailService.sendToCustomer(c.getEmail(), customer);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to send OTP email. Please try again.");
-        }
-
-        // Encode the password and set the necessary fields
-        customer.setPassword(encoder.encode(c.getPassword()));
-        customer.setSignupDateTime(new Date());
-        customer.setStatus(false);  // Set OTP verification status as false
-        customer.setLogin(false);   // Set login status as false
-
-        // Save the new customer to the database
-        return repo.save(customer);
+            // Encode the password and set the necessary fields
+            customer.setPassword(encoder.encode(c.getPassword()));
+            customer.setSignupDateTime(new Date());
+            customer.setStatus(false);  // Set OTP verification status as false
+            customer.setLogin(false);   // Set login status as false
+            
+            int otp = EmailService.otpGanaretor();
+            customer.setSignupVerificationKey(otp);
+            Customer saved = repo.save(customer);
+            emailService.sendToCustomer(cleanedEmail, otp);
+            return saved;
     }
 
 
     @Override
     public Customer customerLogin(String email, String password) {
-        Customer c = repo.findByEmail(email);
+        String cleanedEmail = email.trim().toLowerCase();
+        Customer c = repo.findByEmail(cleanedEmail);
 
         if (c == null) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid email or password");
@@ -101,8 +99,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Boolean validateEmail(String email, Integer otp) {
-
-        Customer c = repo.findByEmail(email);//find the user with the provided email
+        String cleanedEmail = email.trim().toLowerCase();
+        Customer c = repo.findByEmail(cleanedEmail);//find the user with the provided email
         if (c != null) {
             if (c.getSignupVerificationKey() == otp)//check the otp present in the database is equal to otp provided by the user
             {
@@ -113,7 +111,7 @@ public class CustomerServiceImpl implements CustomerService {
                 return false;
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not a Valid User");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not a Valid User: " + cleanedEmail);
         }
     }
 

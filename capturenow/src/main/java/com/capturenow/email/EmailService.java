@@ -36,14 +36,12 @@ public class EmailService {
     }
 
     @Async
-    public void sendToCustomer(String to, Customer c) {
-    	
-    	c.setSignupVerificationKey(otpGanaretor());
+    public void sendToCustomer(String to, int otp) {
     	
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: <h1 style='color:blue;'>"+ c.getSignupVerificationKey() + "</h1><br><br>Sincerely,<br><br>CaptureNow", true);
+            helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: <h1 style='color:blue;'>"+ otp + "</h1><br><br>Sincerely,<br><br>CaptureNow", true);
             helper.setTo(to);
             helper.setSubject("Confirm your email id");
             helper.setFrom("capturenow.in@gmail.com");
@@ -55,14 +53,12 @@ public class EmailService {
     }
     
     @Async
-    public void sendToPhotographer(String to, Photographer p) {
-    	
-    	p.setSignupVerificationKey(otpGanaretor());
+    public void sendToPhotographer(String to, int otp) {
     	
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: <h1 style='color:blue;'>"+ p.getSignupVerificationKey() + "</h1><br><br>Sincerely,<br><br>CaptureNow", true);
+            helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: <h1 style='color:blue;'>"+ otp + "</h1><br><br>Sincerely,<br><br>CaptureNow", true);
             helper.setTo(to);
             helper.setSubject("Confirm your email id");
             helper.setFrom("capturenow.in@gmail.com");

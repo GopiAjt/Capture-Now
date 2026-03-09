@@ -48,21 +48,24 @@ public class PhotographerServiceImpl implements PhotographerService {
 
     @Override
     public Photographer photographerSignup(PhotographerRegistrationDTO photographer) {
-
-        Photographer exist = repo.findByEmail(photographer.getEmail());
+        String cleanedEmail = photographer.getEmail().trim().toLowerCase();
+        Photographer exist = repo.findByEmail(cleanedEmail);
 
         if (exist == null) {
             Photographer p = new Photographer();
             p.setName(photographer.getName());
-            p.setEmail(photographer.getEmail());
+            p.setEmail(cleanedEmail);
             p.setPassword(encoder.encode(photographer.getPassword()));
             p.setPhoneNumber(photographer.getPhoneNumber());
             p.setStartsWith(0.0);
-            emailService.sendToPhotographer(photographer.getEmail(), p);
             p.setSignupDateTime(new Date());
             p.setStatus(false);
             p.setLogin(false);
-            return repo.save(p);
+            int otp = EmailService.otpGanaretor();
+            p.setSignupVerificationKey(otp);
+            Photographer saved = repo.save(p);
+            emailService.sendToPhotographer(cleanedEmail, otp);
+            return saved;
         } else {
             return null;
         }
@@ -71,8 +74,8 @@ public class PhotographerServiceImpl implements PhotographerService {
 
     @Override
     public Photographer photographerSignin(String email, String password) {
-
-        Photographer p = repo.findByEmail(email);//find the user with the email provided
+        String cleanedEmail = email.trim().toLowerCase();
+        Photographer p = repo.findByEmail(cleanedEmail);//find the user with the email provided
 
         if (p != null)//check if the user with email is present
         {
@@ -95,8 +98,8 @@ public class PhotographerServiceImpl implements PhotographerService {
 
     @Override
     public Boolean validateEmail(String email, Integer otp) {
-
-        Photographer p = repo.findByEmail(email);//find the user with the provided email
+        String cleanedEmail = email.trim().toLowerCase();
+        Photographer p = repo.findByEmail(cleanedEmail);//find the user with the provided email
         if (p != null) {
             if (p.getSignupVerificationKey() == otp)//check the otp present in the database is equal to otp provided by the user
             {
@@ -108,7 +111,7 @@ public class PhotographerServiceImpl implements PhotographerService {
                 return false;
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not a Valid User");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not a Valid User: " + cleanedEmail);
         }
     }
 
@@ -207,7 +210,8 @@ public class PhotographerServiceImpl implements PhotographerService {
 
     @Override
     public String forgotPassword(String emailId, String newPassword, Integer otp) {
-        Photographer photographer = repo.findByEmail(emailId);
+        String cleanedEmail = emailId.trim().toLowerCase();
+        Photographer photographer = repo.findByEmail(cleanedEmail);
         if (photographer != null) {
             if (photographer.getResetPasswordVerificationKey() == otp) {
                 photographer.setPassword(encoder.encode(newPassword));
