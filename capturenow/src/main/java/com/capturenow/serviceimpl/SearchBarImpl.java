@@ -13,75 +13,59 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import com.capturenow.module.Packages;
+import java.util.Comparator;
 
 @Service
 @Data
 public class SearchBarImpl implements SearchBarService {
 
-    @Autowired
     private final PhotographerRepo repo;
 
+    @Override
     public Page<PhotographerCardDto> searchByPreference(String preference, int offset, int pageSize) {
-        List<PhotographerCardDto> photographerCardDtos = new ArrayList<>();
-        Page<Photographer> photographers = repo.findAll(PageRequest.of(offset, pageSize));
+        PageRequest pageRequest = PageRequest.of(offset, pageSize);
+        Page<Photographer> photographers = repo.searchPhotographer(preference, pageRequest);
+        
+        return photographers.map(this::mapToCardDto);
+    }
 
-        for (Photographer p : photographers) {
-            Set<String> services = new HashSet<>(Arrays.asList(p.getServices().split(",\\s*|\\s+")));
-            Set<String> languages = new HashSet<>(Arrays.asList(p.getLanguages().split(",\\s*|\\s+")));
+    private PhotographerCardDto mapToCardDto(Photographer p) {
+        PhotographerCardDto dto = new PhotographerCardDto();
+        dto.setId(p.getId());
+        dto.setName(p.getName());
+        dto.setExperience(p.getExperience());
+        dto.setLanguages(p.getLanguages());
+        dto.setServices(p.getServices());
+        dto.setAvgRating(p.getAvgRating());
+        dto.setServiceLocation(p.getServiceLocation());
+        dto.setEmail(p.getEmail());
 
-            if (containsIgnoreCase(languages, preference) || containsIgnoreCase(services, preference)) {
-                PhotographerCardDto photographerCardDto = new PhotographerCardDto();
-                photographerCardDto.setId(p.getId());
-                photographerCardDto.setName(p.getName());
-                photographerCardDto.setExperience(p.getExperience());
-                photographerCardDto.setLanguages(p.getLanguages());
-                photographerCardDto.setServices(p.getServices());
-                photographerCardDto.setAvgRating(p.getAvgRating());
-                photographerCardDto.setServiceLocation(p.getServiceLocation());
-
-                if (p.getProfilePhoto() != null) {
-                    photographerCardDto.setProfilePhoto(ImageUtils.decompressImage(p.getProfilePhoto()));
-                } else {
-                    photographerCardDto.setProfilePhoto(null);
-                }
-
-                photographerCardDtos.add(photographerCardDto);
-            }
+        List<Packages> packages = p.getPackages();
+        if (packages != null && !packages.isEmpty()) {
+            packages.sort(Comparator.comparingDouble(Packages::getEventRate));
+            dto.setStartsWith(packages.get(0).getEventRate());
+        } else {
+            dto.setStartsWith(0.0);
         }
 
-        return new PageImpl<>(photographerCardDtos, photographers.getPageable(), photographers.getTotalElements());
+        if (p.getProfilePhoto() != null) {
+            dto.setProfilePhoto(ImageUtils.decompressImage(p.getProfilePhoto()));
+        } else {
+            dto.setProfilePhoto(null);
+        }
+        return dto;
     }
 
-    private boolean containsIgnoreCase(Set<String> set, String preference) {
-        return set.stream().anyMatch(s -> s.equalsIgnoreCase(preference));
-    }
+
 
 
     @Override
     public List<PhotographerCardDto> searchByLocation(String location) {
-        List<PhotographerCardDto> photographerCardDtos = new ArrayList<>();
-        List<Photographer> photographers = repo.findAll();
-
-        for (Photographer p : photographers) {
-            Set<String> services = new HashSet<>(Arrays.asList(p.getServiceLocation().split(" ")));
-
-            if (containsIgnoreCase(services, location)) {  // Use lowercase for case-insensitive matching
-                PhotographerCardDto photographerCardDto = new PhotographerCardDto();
-                photographerCardDto.setName(p.getName());
-                photographerCardDto.setExperience(p.getExperience());
-                photographerCardDto.setLanguages(p.getLanguages());
-                photographerCardDto.setServices(p.getServices());
-                photographerCardDto.setEmail(p.getEmail());
-                photographerCardDto.setAvgRating(p.getAvgRating());
-                photographerCardDto.setServiceLocation(p.getServiceLocation());
-                if (p.getProfilePhoto() != null){
-                    photographerCardDto.setProfilePhoto(ImageUtils.decompressImage(p.getProfilePhoto()));
-                }else {
-                    photographerCardDto.setProfilePhoto(null);
-                }
-                photographerCardDtos.add(photographerCardDto);
-            }
-        }
-        return photographerCardDtos;
+        List<Photographer> photographers = repo.searchPhotographer(location, PageRequest.of(0, 100)).getContent();
+        return photographers.stream()
+                .map(this::mapToCardDto)
+                .collect(Collectors.toList());
     }
 }

@@ -55,45 +55,32 @@ public class AlbumServiceImple implements AlbumService {
 
     @Override
     public Page<Albums> downloadEquipments(String id, int offset, int pageSize) {
-        List<Albums> ab = new ArrayList<>();
         Optional<Photographer> p = repo.findById(id);
         if (p.isEmpty()) {
-            return new PageImpl<>(ab, PageRequest.of(offset / pageSize, pageSize), 0);
+            return new PageImpl<>(new ArrayList<>(), PageRequest.of(offset, pageSize), 0);
         }
-        List<Albums> album = p.get().getAlbums();
-        for (Albums a : album) {
-            if (a.getCategory().equals("equipment")) {
-                a.setPhoto(ImageUtils.decompressImage(a.getPhoto()));
-                ab.add(a);
-            }
-        }
-        Pageable pageable = PageRequest.of(offset / pageSize, pageSize);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), ab.size());
-        List<Albums> pagedList = ab.subList(start, end);
-        return new PageImpl<>(pagedList, pageable, ab.size());
+        Pageable pageable = PageRequest.of(offset, pageSize);
+        Page<Albums> albumsPage = albumRepo.findByPhotographerAndCategory(p.get(), "equipment", pageable);
+        
+        albumsPage.getContent().forEach(a -> a.setPhoto(ImageUtils.decompressImage(a.getPhoto())));
+        
+        return albumsPage;
     }
 
     @Override
     public Page<Albums> downloadAlbum(String id, int offset, int pageSize) {
-        List<Albums> ab = new ArrayList<>();
         Optional<Photographer> p = repo.findById(id);
         if (p.isEmpty()) {
-            return new PageImpl<>(ab, PageRequest.of(offset / pageSize, pageSize), 0);
+            return new PageImpl<>(new ArrayList<>(), PageRequest.of(offset, pageSize), 0);
         }
-        List<Albums> album = p.get().getAlbums();
-        for (Albums a : album) {
-            if (!a.getCategory().equals("equipment")) {
-                a.setPhoto(ImageUtils.decompressImage(a.getPhoto()));
-                ab.add(a);
-            }
-        }
-        Pageable pageable = PageRequest.of(offset / pageSize, pageSize);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), ab.size());
-        List<Albums> pagedList = ab.subList(start, end);
-        return new PageImpl<>(pagedList, pageable, ab.size());
+        Pageable pageable = PageRequest.of(offset, pageSize);
+        Page<Albums> albumsPage = albumRepo.findByPhotographerAndCategoryNot(p.get(), "equipment", pageable);
+        
+        albumsPage.getContent().forEach(a -> a.setPhoto(ImageUtils.decompressImage(a.getPhoto())));
+        
+        return albumsPage;
     }
+
 
     @Override
     @Transactional

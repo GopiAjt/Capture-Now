@@ -4,7 +4,9 @@ import com.capturenow.config.ImageUtils;
 import com.capturenow.dto.*;
 import com.capturenow.email.EmailService;
 import com.capturenow.module.*;
+import com.capturenow.repository.AlbumRepo;
 import com.capturenow.repository.CustomerRepo;
+
 import com.capturenow.repository.PhotographerRepo;
 import com.capturenow.repository.RatingRepo;
 import com.capturenow.service.AlbumService;
@@ -40,6 +42,8 @@ public class CustomerServiceImpl implements CustomerService {
     private final Photographer photographer;
 
     private final PhotographerSorter photographerSorter;
+    private final AlbumRepo albumRepo;
+
 
 
 
@@ -161,29 +165,26 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Page<AlbumResponseDto> getAlbumByEmail(String email, int offset, int pageSize) {
         Photographer p = photographerRepo.findByEmail(email);
-        List<AlbumResponseDto> albumResponseDtos = new ArrayList<>();
-        if (photographer == null) {
-            return new PageImpl<>(albumResponseDtos, PageRequest.of(offset / pageSize, pageSize), 0);
+        if (p == null) {
+            return new PageImpl<>(new ArrayList<>(), PageRequest.of(offset, pageSize), 0);
         }
 
-        List<Albums> albums = photographer.getAlbums();
+        Pageable pageable = PageRequest.of(offset, pageSize);
+        Page<Albums> albumsPage = albumRepo.findByPhotographerAndCategoryNot(p, "equipment", pageable);
 
-        for (Albums a : albums) {
-            if (!a.getCategory().equals("equipment")) {
-                AlbumResponseDto albumResponseDto = new AlbumResponseDto();
-                albumResponseDto.setPhoto(ImageUtils.decompressImage(a.getPhoto()));
-                albumResponseDto.setCategory(a.getCategory());
-                albumResponseDto.setName(a.getName());
-                albumResponseDtos.add(albumResponseDto);
-            }
-        }
+        List<AlbumResponseDto> albumResponseDtos = albumsPage.getContent().stream()
+                .map(a -> {
+                    AlbumResponseDto dto = new AlbumResponseDto();
+                    dto.setPhoto(ImageUtils.decompressImage(a.getPhoto()));
+                    dto.setCategory(a.getCategory());
+                    dto.setName(a.getName());
+                    return dto;
+                })
+                .collect(Collectors.toList());
 
-        Pageable pageable = PageRequest.of(offset / pageSize, pageSize);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), albumResponseDtos.size());
-        List<AlbumResponseDto> pagedList = albumResponseDtos.subList(start, end);
-        return new PageImpl<>(pagedList, pageable, albumResponseDtos.size());
+        return new PageImpl<>(albumResponseDtos, pageable, albumsPage.getTotalElements());
     }
+
 
     public List<AlbumResponseDto> getEquipmentsByEmail(String email) {
         Photographer photographer = photographerRepo.findByEmail(email);

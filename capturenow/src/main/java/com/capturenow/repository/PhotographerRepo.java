@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Repository
 public interface PhotographerRepo extends JpaRepository<Photographer, String> {
@@ -20,9 +22,18 @@ public interface PhotographerRepo extends JpaRepository<Photographer, String> {
     @Query("SELECT p FROM Photographer p WHERE " +
             "LOWER(p.name) LIKE CONCAT('%', LOWER(:query), '%') " +
             "OR LOWER(p.services) LIKE CONCAT('%', LOWER(:query), '%') " +
-            "OR LOWER(p.email) LIKE CONCAT('%', LOWER(:query), '%')"+
-            "OR LOWER(p.languages) LIKE CONCAT('%', LOWER(:query), '%')"+
+            "OR LOWER(p.email) LIKE CONCAT('%', LOWER(:query), '%') " +
+            "OR LOWER(p.languages) LIKE CONCAT('%', LOWER(:query), '%') " +
             "OR LOWER(p.serviceLocation) LIKE CONCAT('%', LOWER(:query), '%')")
     List<Photographer> searchPhotographer(@Param("query") String query);
+
+    @Query("SELECT p FROM Photographer p WHERE " +
+            "LOWER(p.name) LIKE CONCAT('%', LOWER(:query), '%') " +
+            "OR LOWER(p.services) LIKE CONCAT('%', LOWER(:query), '%') " +
+            "OR LOWER(p.email) LIKE CONCAT('%', LOWER(:query), '%') " +
+            "OR LOWER(p.languages) LIKE CONCAT('%', LOWER(:query), '%') " +
+            "OR LOWER(p.serviceLocation) LIKE CONCAT('%', LOWER(:query), '%')")
+    Page<Photographer> searchPhotographer(@Param("query") String query, Pageable pageable);
+
 
 }
