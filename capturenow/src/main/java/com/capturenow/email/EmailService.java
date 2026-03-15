@@ -2,11 +2,12 @@ package com.capturenow.email;
 
 import com.capturenow.repository.CustomerRepo;
 import com.capturenow.repository.PhotographerRepo;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -17,7 +18,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EmailService {
 
     private final static Logger LOGGER = LoggerFactory
@@ -28,6 +29,10 @@ public class EmailService {
     private final PhotographerRepo photographerRepo;
 
     private final CustomerRepo customerRepo;
+
+    @Value("${app.email.from}")
+    private String fromEmail;
+
 
     public static int otpGanaretor()
     {
@@ -44,7 +49,7 @@ public class EmailService {
             helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: <h1 style='color:blue;'>"+ otp + "</h1><br><br>Sincerely,<br><br>CaptureNow", true);
             helper.setTo(to);
             helper.setSubject("Confirm your email id");
-            helper.setFrom("capturenow.in@gmail.com");
+            helper.setFrom(fromEmail);
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
@@ -61,7 +66,7 @@ public class EmailService {
             helper.setText("Hello, <br><br> Just one more step before you get started. <br><br> You must confirm your identity using the one-time pass code: <h1 style='color:blue;'>"+ otp + "</h1><br><br>Sincerely,<br><br>CaptureNow", true);
             helper.setTo(to);
             helper.setSubject("Confirm your email id");
-            helper.setFrom("capturenow.in@gmail.com");
+            helper.setFrom(fromEmail);
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
@@ -78,7 +83,7 @@ public class EmailService {
             helper.setText("Hello, <br><br> Just one more step to Reset you password. <br><br> You must confirm your identity using the one-time pass code: <h1 style='color:blue;'>"+ photographer.getResetPasswordVerificationKey() + "</h1><br><br>Sincerely,<br><br>CaptureNow.in", true);
             helper.setTo(to);
             helper.setSubject("OTP to Reset Password");
-            helper.setFrom("capturenow.in@gmail.com");
+            helper.setFrom(fromEmail);
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
@@ -95,7 +100,7 @@ public class EmailService {
             helper.setText("Hello, <br><br> Just one more step to Reset you password. <br><br> You must confirm your identity using the one-time pass code: <h1 style='color:blue;'>"+ customer.getResetPasswordVerificationKey() + "</h1><br><br>Sincerely,<br><br>CaptureNow.in", true);
             helper.setTo(to);
             helper.setSubject("OTP to Reset Password");
-            helper.setFrom("capturenow.in@gmail.com");
+            helper.setFrom(fromEmail);
             mailSender.send(mimeMessage);
         }catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
@@ -112,7 +117,7 @@ public class EmailService {
                             "<br><br>Please go to you Dashboard to Accept the Booking<br><br>CaptureNow.in", true);
             helper.setTo(to);
             helper.setSubject("Alert! you got an order");
-            helper.setFrom("capturenow.in@gmail.com");
+            helper.setFrom(fromEmail);
             mailSender.send(mimeMessage);
         }catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
@@ -132,7 +137,7 @@ public class EmailService {
                             "<br><br>CaptureNow.in", true);
             helper.setTo(to);
             helper.setSubject("Your Booking is confirmed!");
-            helper.setFrom("capturenow.in@gmail.com");
+            helper.setFrom(fromEmail);
             mailSender.send(mimeMessage);
         }catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
@@ -151,7 +156,7 @@ public class EmailService {
                             "<br><br>CaptureNow.in", true);
             helper.setTo(to);
             helper.setSubject("Your Booking is declined!");
-            helper.setFrom("capturenow.in@gmail.com");
+            helper.setFrom(fromEmail);
             mailSender.send(mimeMessage);
         }catch (MessagingException e) {
             LOGGER.error("failed to send email", e);

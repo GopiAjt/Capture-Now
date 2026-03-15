@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -39,6 +40,10 @@ public class SecurityConfig {
 	
 	@Autowired
 	private JwtAuthFilter authFilter;
+
+	@Value("${app.cors.origins}")
+	private List<String> allowedOrigins;
+
 
 	@Bean
 	public UserDetailsService userDetailsService() {
@@ -150,14 +155,10 @@ public class SecurityConfig {
 		CorsConfiguration configuration = new CorsConfiguration();
 
 		// Allow multiple origins
-		configuration.setAllowedOrigins(List.of("http://localhost:3000",
-												"http://localhost:3001",
-												"https://capture-noww.vercel.app/",
-												"https://photographer-capture-now.vercel.app/",
-												"http://127.0.0.1:5505",
-												"http://localhost:5173"));
+		configuration.setAllowedOrigins(allowedOrigins);
 
 		configuration.setAllowedHeaders(List.of("*"));
+
 		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
 		// Allow credentials if needed

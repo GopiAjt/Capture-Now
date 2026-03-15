@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
@@ -17,7 +18,9 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtService {
 
-	private static final String SECRET = "B6F38ED4EA45561006BA6E21F0187CC868C82226F42ADD9C4D077119A12850B7";
+	@Value("${app.jwt.secret}")
+	private String secret;
+
 
 	public String ganarateToken(String username)
 	{
@@ -37,7 +40,7 @@ public class JwtService {
 	}
 
 	private Key getSignKey() {
-		byte[] key = Decoders.BASE64.decode(SECRET);
+		byte[] key = Decoders.BASE64.decode(secret);
 		return Keys.hmacShaKeyFor(key);
 	}
 
