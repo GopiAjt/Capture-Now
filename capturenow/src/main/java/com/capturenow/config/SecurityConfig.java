@@ -62,11 +62,10 @@ public class SecurityConfig {
 		return http.csrf().disable()
 				.cors(Customizer.withDefaults())
 				.securityMatcher(AntPathRequestMatcher.antMatcher("/customer/**"))
-				.authorizeHttpRequests()
-				.requestMatchers("/customer/signup","/customer/signin","/customer/authtoken","/customer/validate",
+				.authorizeHttpRequests().requestMatchers("/customer/signup","/customer/signin","/customer/authtoken","/customer/validate",
 						"/photographer/signup","/photographer/validate","/photographer/signin","/photographer/authtoken",
 						"/customer/getPhotographersIndex/{offset}/{pageSize}", "/customer/addFilter/{offset}/{pageSize}/{field}",
-						"/customer/forgotPasswordOtp","/customer/forgotPassword", "/customer/searchByPreference", "/customer/health")
+						"/customer/forgotPasswordOtp","/customer/forgotPassword", "/customer/searchByPreference", "/customer/health", "/customer/refreshToken")
 				.permitAll()
 				.and()
 				.authorizeHttpRequests().requestMatchers("/customer/getPhotographers/{offset}/{pageSize}","/customer/getPhotographerById",
@@ -89,10 +88,9 @@ public class SecurityConfig {
 		return http.csrf().disable()
 				.cors(Customizer.withDefaults())
 				.securityMatcher(AntPathRequestMatcher.antMatcher("/photographer/**"))
-				.authorizeHttpRequests()
-				.requestMatchers("/customer/signup","/customer/authtoken","/customer/validate","/photographer/signup",
+				.authorizeHttpRequests().requestMatchers("/customer/signup","/customer/authtoken","/customer/validate","/photographer/signup",
 						"/photographer/validate","/photographer/Login","/photographer/authtoken","/photographer/searchPhotographers",
-						"/photographer/forgotPassword","/photographer/forgotPasswordOtp")
+						"/photographer/forgotPassword","/photographer/forgotPasswordOtp", "/photographer/refreshToken")
 				.permitAll()
 				.and()
 				.authorizeHttpRequests().requestMatchers("/photographer/addAlbums",

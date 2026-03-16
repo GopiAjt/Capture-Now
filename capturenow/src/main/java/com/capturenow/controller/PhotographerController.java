@@ -9,6 +9,9 @@ import com.capturenow.module.Photographer;
 import com.capturenow.repository.PhotographerRepo;
 import com.capturenow.service.*;
 import com.capturenow.serviceimpl.JwtService;
+import com.capturenow.serviceimpl.RefreshTokenService;
+import com.capturenow.module.RefreshToken;
+
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,19 +107,37 @@ public class PhotographerController {
 		return new ResponseEntity<>(b, HttpStatus.BAD_REQUEST);
 	}
 
+	@Autowired
+	private RefreshTokenService refreshTokenService;
+
 	@GetMapping(path = "/authtoken")
-	public String authToken(@RequestParam String email, @RequestParam String password) {
+	public JwtResponseDto authToken(@RequestParam String email, @RequestParam String password) {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 		log.info(authentication.isAuthenticated());
 		if (authentication.isAuthenticated()) {
-			String token = jwtservice.ganarateToken(email);
-			Photographer p = repo.findByEmail(email);
-			p.setAuthToken(token);
-			repo.save(p);
-			return token;
+			RefreshToken refreshToken = refreshTokenService.createRefreshTokenForPhotographer(email);
+			return JwtResponseDto.builder()
+					.accessToken(jwtservice.ganarateToken(email))
+					.token(refreshToken.getToken())
+					.build();
 		}
-		return "false";
+		throw new RuntimeException("Invalid authentication");
 	}
+
+	@PostMapping("/refreshToken")
+	public JwtResponseDto refreshToken(@RequestBody TokenRefreshRequestDto tokenRefreshRequestDto) {
+		return refreshTokenService.findByToken(tokenRefreshRequestDto.getToken())
+				.map(refreshTokenService::verifyExpiration)
+				.map(RefreshToken::getPhotographer)
+				.map(photographer -> {
+					String accessToken = jwtservice.ganarateToken(photographer.getEmail());
+					return JwtResponseDto.builder()
+							.accessToken(accessToken)
+							.token(tokenRefreshRequestDto.getToken())
+							.build();
+				}).orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
+	}
+
 
 	@PostMapping(path = "/addAlbums", consumes = "multipart/form-data")
 	@PreAuthorize("hasAuthority('ROLE_PHOTOGRAPHER')")

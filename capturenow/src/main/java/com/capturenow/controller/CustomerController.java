@@ -7,6 +7,8 @@ import com.capturenow.repository.CustomerRepo;
 import com.capturenow.service.*;
 import com.capturenow.serviceimpl.JwtService;
 import com.capturenow.serviceimpl.PhotographerSorter;
+import com.capturenow.serviceimpl.RefreshTokenService;
+
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,20 +146,38 @@ public class CustomerController {
         return Collections.emptyList(); // or return null if you prefer
     }
 
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
     @GetMapping(path = "/authtoken")
-    public String authAndGetToken(@RequestParam String email, @RequestParam String password) {
+    public JwtResponseDto authAndGetToken(@RequestParam String email, @RequestParam String password) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         log.info(authentication.isAuthenticated());
         if (authentication.isAuthenticated()) {
-            String token = jwtservice.ganarateToken(email);
-            Customer c = customerRepo.findByEmail(email);
-            c.setAuthToken(token);
-            customerRepo.save(c);
-            return token;
+            RefreshToken refreshToken = refreshTokenService.createRefreshTokenForCustomer(email);
+            return JwtResponseDto.builder()
+                    .accessToken(jwtservice.ganarateToken(email))
+                    .token(refreshToken.getToken())
+                    .build();
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
     }
+
+    @PostMapping("/refreshToken")
+    public JwtResponseDto refreshToken(@RequestBody TokenRefreshRequestDto tokenRefreshRequestDto) {
+        return refreshTokenService.findByToken(tokenRefreshRequestDto.getToken())
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getCustomer)
+                .map(customer -> {
+                    String accessToken = jwtservice.ganarateToken(customer.getEmail());
+                    return JwtResponseDto.builder()
+                            .accessToken(accessToken)
+                            .token(tokenRefreshRequestDto.getToken())
+                            .build();
+                }).orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
+    }
+
 
     @GetMapping(path = "/getPhotographers/{offset}/{pageSize}")
     @PreAuthorize("hasAuthority('ROLE_USER')")
